@@ -1,0 +1,499 @@
+
+import React, { useMemo, useState, useEffect } from 'react';
+import { UserStats } from '../types';
+import { getDaysToMatura, ACHIEVEMENTS_LIST, getDailyPlanStatus, toggleDailyPlanTask } from '../services/storageService';
+import { 
+  Zap, Trophy, Target, BookOpen, Clock, CheckCircle, BrainCircuit, 
+  AlertOctagon, BookA, Library, Headphones, FileText, Star, Award, 
+  Crown, Moon, Sun, Trash2, CheckSquare, Square,
+  Languages, Lightbulb, Dumbbell, Heart, Flame, RotateCw, Check,
+  Car, Hammer
+} from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+
+interface DashboardProps {
+  stats: UserStats;
+  onNavigate: (view: any) => void;
+}
+
+// Icon mapping
+const ICON_MAP: Record<string, any> = {
+  Dumbbell, Heart, Zap, BrainCircuit, Trophy, Star, BookOpen, Car, Hammer, Lightbulb
+};
+
+// --- 50 UNIKALNYCH ZDAŃ (MATEUSZ LORE) ---
+const MATEUSZ_CHALLENGES = [
+  // ... (Keep existing array content same as previous update)
+  // HANIA (Love Interest)
+  { en: "I saw Hania at the bus stop and forgot my own name.", pl: "Zobaczyłem Hanię na przystanku i zapomniałem, jak się nazywam.", icon: "Heart" },
+  { en: "Hania liked my post on Instagram, so we are basically married.", pl: "Hania polubiła mój post na Instagramie, więc praktycznie jesteśmy małżeństwem.", icon: "Heart" },
+  { en: "I bought flowers for Hania, but I gave them to my mom instead.", pl: "Kupiłem kwiaty dla Hani, ale dałem je mamie.", icon: "Heart" },
+  { en: "Does Hania like boys who drive Mustangs?", pl: "Czy Hania lubi chłopaków, którzy jeżdżą Mustangami?", icon: "Car" },
+  { en: "I pretended to read a book because Hania was looking.", pl: "Udawałem, że czytam książkę, bo Hania patrzyła.", icon: "BookOpen" },
+  { en: "My biceps are huge, but my heart is empty without Hania.", pl: "Moje bicepsy są wielkie, ale serce puste bez Hani.", icon: "Dumbbell" },
+  { en: "I hope Hania notices my new skinny jeans.", pl: "Mam nadzieję, że Hania zauważy moje nowe rurki.", icon: "Star" },
+  { en: "Hania smiled at me, or maybe at the guy behind me.", pl: "Hania uśmiechnęła się do mnie, albo do gościa za mną.", icon: "BrainCircuit" },
+  { en: "I need to pass Matura to impress Hania's father.", pl: "Muszę zdać maturę, żeby zaimponować ojcu Hani.", icon: "Trophy" },
+  { en: "Every rep at the gym is for Hania.", pl: "Każde powtórzenie na siłowni jest dla Hani.", icon: "Dumbbell" },
+
+  // MUSTANG & WUJEK
+  { en: "My uncle said I can drive the Mustang if I pass English.", pl: "Wujek powiedział, że dam mi poprowadzić Mustanga, jak zdam angielski.", icon: "Car" },
+  { en: "The Mustang is broken again, just like my dreams.", pl: "Mustang znowu się zepsuł, tak jak moje marzenia.", icon: "Car" },
+  { en: "I tried to drift in the Mustang but I hit a tree.", pl: "Próbowałem driftować Mustangiem, ale uderzyłem w drzewo.", icon: "Car" },
+  { en: "Krystian screamed when I started the Mustang's engine.", pl: "Krystian krzyknął, jak odpaliłem silnik Mustanga.", icon: "Car" },
+  { en: "I took a photo with the Mustang to make Oliwia jealous.", pl: "Zrobiłem sobie fotkę z Mustangiem, żeby Oliwia była zazdrosna.", icon: "Car" },
+  { en: "This Mustang consumes more fuel than I consume protein.", pl: "Ten Mustang pali więcej paliwa niż ja zjadam białka.", icon: "Zap" },
+  { en: "My uncle loves his car more than his family.", pl: "Mój wujek kocha swój samochód bardziej niż rodzinę.", icon: "Heart" },
+  { en: "I want to paint the Mustang matte black.", pl: "Chcę pomalować Mustanga na czarny mat.", icon: "Car" },
+
+  // GYM & KRYSTIAN
+  { en: "Krystian benches 100kg, but I have better technique.", pl: "Krystian wyciska 100kg, ale ja mam lepszą technikę.", icon: "Dumbbell" },
+  { en: "Leg day is a myth invented by the government.", pl: "Dzień nóg to mit wymyślony przez rząd.", icon: "BrainCircuit" },
+  { en: "My protein shake tastes like chalk, but gains are gains.", pl: "Mój szejk białkowy smakuje jak kreda, ale masa to masa.", icon: "Zap" },
+  { en: "I spotted Krystian while he was lifting heavy weights.", pl: "Asekurowałem Krystiana, gdy podnosił duże ciężary.", icon: "Dumbbell" },
+  { en: "Do I need English if I want to be a personal trainer?", pl: "Czy potrzebuję angielskiego, jeśli chcę być trenerem personalnym?", icon: "Trophy" },
+  { en: "My gym membership is more expensive than my books.", pl: "Karnet na siłownię jest droższy niż moje książki.", icon: "Star" },
+  { en: "I tore my favourite t-shirt while flexing.", pl: "Rozdarłem ulubioną koszulkę podczas napinania mięśni.", icon: "Dumbbell" },
+  { en: "Krystian says creatine is safe, so I trust him.", pl: "Krystian mówi, że kreatyna jest bezpieczna, więc mu ufam.", icon: "BrainCircuit" },
+  { en: "We train chest every Monday, no exceptions.", pl: "Robimy klatę w każdy poniedziałek, bez wyjątków.", icon: "Dumbbell" },
+
+  // EX-GIRLFRIENDS (DRAMA)
+  { en: "Sara texted me, but I am too busy studying.", pl: "Sara do mnie napisała, ale jestem zbyt zajęty nauką.", icon: "BrainCircuit" },
+  { en: "Oliwia never appreciated my sense of style.", pl: "Oliwia nigdy nie doceniała mojego stylu.", icon: "Star" },
+  { en: "I blocked Klaudia because she laughed at my shoes.", pl: "Zablokowałem Klaudię, bo śmiała się z moich butów.", icon: "Trash2" },
+  { en: "My ex-girlfriend is dating a guy who rides a bike.", pl: "Moja była chodzi z gościem, który jeździ na rowerze.", icon: "Car" },
+  { en: "I saw Sara at the cinema with someone else.", pl: "Widziałem Sarę w kinie z kimś innym.", icon: "Heart" },
+  { en: "Gosia was my first love in primary school.", pl: "Gosia była moją pierwszą miłością w podstawówce.", icon: "Heart" },
+  { en: "I don't need Sara, I have the gym.", pl: "Nie potrzebuję Sary, mam siłownię.", icon: "Dumbbell" },
+
+  // FASHION (SKINNY JEANS)
+  { en: "My jeans are so tight I cannot feel my legs.", pl: "Moje dżinsy są tak ciasne, że nie czuję nóg.", icon: "Zap" },
+  { en: "It takes me ten minutes to take off these trousers.", pl: "Zajmuje mi dziesięć minut, żeby zdjąć te spodnie.", icon: "Clock" },
+  { en: "Krystian says my pants look like leggings.", pl: "Krystian mówi, że moje spodnie wyglądają jak legginsy.", icon: "Star" },
+  { en: "I cannot squat in these jeans.", pl: "Nie mogę zrobić przysiadu w tych dżinsach.", icon: "Dumbbell" },
+  { en: "Fashion is pain, but I look good.", pl: "Moda to ból, ale wyglądam dobrze.", icon: "Star" },
+  { en: "I need to buy tighter jeans for the party.", pl: "Muszę kupić węższe dżinsy na imprezę.", icon: "Trophy" },
+
+  // GENERAL & SCHOOL
+  { en: "I failed math again, but English is easy.", pl: "Znowu oblałem matmę, ale angielski jest łatwy.", icon: "BookOpen" },
+  { en: "I used to be a pro in Fortnite, now I am retired.", pl: "Kiedyś byłem pro w Fortnite, teraz jestem na emeryturze.", icon: "Trophy" },
+  { en: "The teacher asked me about the Future Simple tense.", pl: "Nauczyciel zapytał mnie o czas Future Simple.", icon: "BookA" },
+  { en: "I am hungry, let's go for a kebab.", pl: "Jestem głodny, chodźmy na kebaba.", icon: "Zap" },
+  { en: "My mother says I spend too much time on my phone.", pl: "Mama mówi, że spędzam za dużo czasu na telefonie.", icon: "BrainCircuit" },
+  { en: "I will study tomorrow, today I rest.", pl: "Będę się uczył jutro, dzisiaj odpoczywam.", icon: "Clock" },
+  { en: "Construction school is hard work.", pl: "Budowlanka to ciężka praca.", icon: "Hammer" },
+  { en: "I need to fix the wall in my room.", pl: "Muszę naprawić ścianę w moim pokoju.", icon: "Hammer" },
+  { en: "My phone battery is always dead.", pl: "Bateria w moim telefonie jest zawsze rozładowana.", icon: "Zap" },
+  { en: "I want to be rich and famous.", pl: "Chcę być bogaty i sławny.", icon: "Star" }
+];
+
+const Dashboard: React.FC<DashboardProps> = ({ stats, onNavigate }) => {
+  
+  // --- DAILY PLANNER STATE ---
+  const [planCompleted, setPlanCompleted] = useState<boolean[]>([false, false]);
+  
+  // --- CHALLENGE STATE ---
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [challengeSolved, setChallengeSolved] = useState(false);
+  
+  // Deterministic daily challenge
+  const currentChallenge = useMemo(() => {
+    const daysSinceEpoch = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+    const index = daysSinceEpoch % MATEUSZ_CHALLENGES.length;
+    return MATEUSZ_CHALLENGES[index];
+  }, []);
+
+  useEffect(() => {
+    setPlanCompleted(getDailyPlanStatus());
+  }, []);
+
+  const handlePlanToggle = (index: number) => {
+    const newStatus = toggleDailyPlanTask(index);
+    setPlanCompleted(newStatus);
+  };
+
+  const tips = [
+    // ... (Keep existing tips)
+    "Na maturze zawsze sprawdź limit słów! Minimum 80 słów.",
+    "W zadaniach na słuchanie, przeczytaj pytania ZANIM nagranie się zacznie.",
+    "Jeśli nie wiesz, strzelaj. Nie ma punktów ujemnych za błędne odpowiedzi.",
+    "W czytaniu szukaj synonimów, a nie tych samych słów co w tekście.",
+    "Na początku egzaminu sprawdź, czy arkusz jest kompletny.",
+    "Zostaw sobie 10 minut na koniec na sprawdzenie karty odpowiedzi.",
+    "W zadaniach otwartych pisz czytelnie. Egzaminator nie będzie zgadywał.",
+    "Jeśli utkniesz na zadaniu, idź dalej. Wrócisz do niego później.",
+    "W e-mailu pamiętaj o akapitach. To punkty za spójność.",
+    "Nie zostawiaj pustych luk. Spróbuj zgadnąć z kontekstu.",
+    "Present Perfect używamy, gdy skutek widzimy 'teraz'.",
+    "Po 'look forward to' czasownik ma końcówkę -ing (to seeing you).",
+    "Unless znaczy to samo co 'if not' (Jeśli nie).",
+    "Przymiotniki zakończone na -ed opisują uczucia (bored), a na -ing cechy (boring).",
+    "Po czasownikach modalnych (can, should, must) czasownik jest w formie podstawowej.",
+    "W zdaniach warunkowych (1. tryb): If + Present Simple, ... will + bezokolicznik.",
+    "Pamiętaj: I agree (nie: I am agree).",
+    "Used to używamy do nawyków z przeszłości, których już nie mamy.",
+    "Who - do ludzi, Which - do rzeczy, Where - do miejsc.",
+    "Liczbę mnogą od 'person' tworzymy nieregularnie: 'people'.",
+  ];
+
+  const randomTip = useMemo(() => tips[Math.floor(Math.random() * tips.length)], []);
+  const daysToExam = getDaysToMatura();
+  
+  // Calculate daily plan
+  const dailyPlan = useMemo(() => {
+    const day = new Date().getDay();
+    const hasManyMistakes = stats.mistakes.length > 5;
+
+    // 0 = Sunday, 1 = Monday, etc.
+    const basePlans = [
+      [{ text: 'Powtórka 20 fiszek', view: 'vocabulary' }, { text: '1 arkusz próbny (Relaks)', view: 'exam' }], // Sun
+      [{ text: '5 zadań z gramatyki', view: 'grammar' }, { text: 'Czytanie: Dobieranie', view: 'reading' }], // Mon
+      [{ text: 'Słuchanie: Prawda/Fałsz', view: 'listening' }, { text: 'Nauka 10 nowych słów', view: 'vocabulary' }], // Tue
+      [{ text: 'Pisanie: E-mail formalny', view: 'writing' }, { text: 'Gramatyka: Tłumaczenia', view: 'grammar' }], // Wed
+      [{ text: 'Czytanie: Tekst z lukami', view: 'reading' }, { text: 'Słuchanie: Wybór', view: 'listening' }], // Thu
+      [{ text: 'Słownictwo (Quiz)', view: 'vocabulary' }, { text: 'Pisanie: Blog', view: 'writing' }], // Fri
+      [{ text: 'Pełny arkusz maturalny', view: 'exam' }, { text: 'Matura Ustna (Symulacja)', view: 'speaking' }], // Sat
+    ];
+
+    let todaysPlan = [...basePlans[day]];
+
+    if (hasManyMistakes) {
+      todaysPlan[0] = { text: `Powtórka z Banku Błędów (${stats.mistakes.length})`, view: 'mistakes' };
+    }
+
+    return todaysPlan;
+  }, [stats.mistakes.length]);
+
+  const chartData = [
+    { name: 'Słownictwo', progress: stats.moduleProgress.vocabulary, color: '#F5C518' },
+    { name: 'Gramatyka', progress: stats.moduleProgress.grammar, color: '#3B82F6' },
+    { name: 'Słuchanie', progress: stats.moduleProgress.listening, color: '#10B981' },
+    { name: 'Czytanie', progress: stats.moduleProgress.reading, color: '#8B5CF6' },
+    { name: 'Pisanie', progress: stats.moduleProgress.writing, color: '#EC4899' },
+  ];
+
+  const getHeatmapColor = (count: number) => {
+    if (count === 0) return 'bg-white/5';
+    if (count === 1) return 'bg-green-500/30 shadow-[0_0_8px_rgba(34,197,94,0.3)]';
+    if (count === 2) return 'bg-green-500/50 shadow-[0_0_10px_rgba(34,197,94,0.5)]';
+    if (count >= 3) return 'bg-green-500 shadow-[0_0_12px_rgba(34,197,94,0.8)] scale-110';
+    return 'bg-green-500';
+  };
+
+  const heatmapDays = useMemo(() => {
+    const days = [];
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toISOString().split('T')[0];
+      const activity = stats.activity.find(a => a.date === dateStr);
+      days.push({
+        date: dateStr,
+        level: activity ? activity.count : 0
+      });
+    }
+    return days;
+  }, [stats.activity]);
+
+  const ChallengeIcon = ICON_MAP[currentChallenge.icon] || Zap;
+
+  return (
+    <div className="space-y-8 animate-fade-in max-w-6xl mx-auto pb-12">
+      
+      {/* 1. Hero Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Welcome Card */}
+        <div className="lg:col-span-2 bg-gradient-to-br from-[#112240] to-[#0A1628] rounded-3xl p-8 border border-white/5 relative overflow-hidden shadow-2xl group hover:shadow-matura-accent/5 transition-all duration-500">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-matura-accent/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-matura-accent/10 transition-all duration-700"></div>
+          
+          <div className="relative z-10">
+            <div className="flex items-center gap-3 mb-2">
+               <span className="px-3 py-1 rounded-full bg-white/5 text-[10px] font-bold uppercase tracking-widest text-matura-accent border border-white/10 backdrop-blur-md">Matura 2025</span>
+               <span className="text-gray-400 text-xs flex items-center gap-1"><Clock size={12}/> {new Date().toLocaleDateString('pl-PL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4 tracking-tight">
+              Cześć, {stats.name.split(' ')[0]}! 👋
+            </h1>
+            <p className="text-gray-400 text-lg max-w-md leading-relaxed">
+              Twój obecny poziom to <strong className="text-white">{stats.level}</strong>. 
+              Do egzaminu (6 maja) zostało:
+            </p>
+            <div className="text-matura-accent font-bold text-4xl my-2 flex items-baseline gap-2">
+               {daysToExam} <span className="text-lg text-gray-400 font-normal">dni</span>
+            </div>
+            
+            <div className="mt-8 flex gap-3 flex-wrap">
+              <button onClick={() => onNavigate('exam')} className="bg-matura-accent text-matura-bg px-6 py-3.5 rounded-xl font-bold hover:bg-yellow-400 transition-all active:scale-95 shadow-[0_0_20px_rgba(245,197,24,0.3)] flex items-center gap-2">
+                <Target size={18} /> Rozwiąż arkusz
+              </button>
+              <button onClick={() => onNavigate('speaking')} className="bg-white/5 backdrop-blur text-white px-6 py-3.5 rounded-xl font-bold hover:bg-white/10 border border-white/10 transition-all flex items-center gap-2 group/btn">
+                <BrainCircuit size={18} className="text-purple-400 group-hover/btn:text-purple-300"/> Matura Ustna
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Interactive Daily Challenge & Tip */}
+        <div className="flex flex-col gap-6 h-full min-h-[400px]">
+          
+          {/* 3D FLIP CARD CHALLENGE */}
+          <div className="perspective-1000 flex-1 relative group h-48 sm:h-auto">
+             <div 
+               className={`relative w-full h-full transition-all duration-700 transform-style-3d cursor-pointer shadow-xl group-hover:scale-[1.02] ${isFlipped ? 'rotate-y-180' : ''}`}
+               onClick={() => setIsFlipped(!isFlipped)}
+             >
+                {/* --- FRONT FACE --- */}
+                <div className="absolute inset-0 backface-hidden bg-gradient-to-br from-[#1e293b] to-[#0f172a] rounded-3xl p-6 border border-white/10 flex flex-col justify-between overflow-hidden shadow-2xl">
+                   {/* Background decoration */}
+                   <div className="absolute -bottom-4 -right-4 text-white/5 rotate-12 transform scale-150 pointer-events-none">
+                     <ChallengeIcon size={120} />
+                   </div>
+
+                   <div className="flex justify-between items-start relative z-10">
+                     <div className="flex items-center gap-2 text-matura-accent text-xs font-bold uppercase tracking-wider bg-matura-accent/5 px-2 py-1 rounded-lg border border-matura-accent/10">
+                       <Zap size={14} className="fill-current" /> Wyzwanie Dnia
+                     </div>
+                   </div>
+
+                   <div className="relative z-10 flex-1 flex flex-col justify-center my-2">
+                     <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest mb-2">Przetłumacz w myślach:</p>
+                     <p className="text-xl md:text-2xl font-bold text-white leading-tight font-display drop-shadow-md">
+                       "{currentChallenge.en}"
+                     </p>
+                   </div>
+
+                   <div className="relative z-10 flex items-center justify-between border-t border-white/5 pt-3">
+                      <span className="text-xs text-gray-400 flex items-center gap-1 group-hover:text-white transition-colors">
+                        <RotateCw size={12} /> Kliknij, aby sprawdzić
+                      </span>
+                      {challengeSolved && <span className="text-green-500 text-xs font-bold flex items-center gap-1 bg-green-500/10 px-2 py-1 rounded"><CheckCircle size={12}/> Zaliczone</span>}
+                   </div>
+                </div>
+
+                {/* --- BACK FACE --- */}
+                <div className="absolute inset-0 backface-hidden rotate-y-180 bg-gradient-to-br from-matura-accent/10 to-[#0f172a] rounded-3xl p-6 border border-matura-accent/30 flex flex-col justify-between overflow-hidden backdrop-blur-xl shadow-[0_0_30px_rgba(245,197,24,0.1)]">
+                   <div className="flex items-center gap-2 text-white text-xs font-bold uppercase tracking-wider mb-2 opacity-60">
+                     <Languages size={14} /> Tłumaczenie
+                   </div>
+                   
+                   <div className="flex-1 flex flex-col justify-center">
+                     <p className="text-lg md:text-xl font-bold text-matura-accent leading-tight">
+                       "{currentChallenge.pl}"
+                     </p>
+                   </div>
+
+                   <div className="pt-4 flex justify-between items-center">
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); setIsFlipped(false); }}
+                        className="text-xs text-gray-400 hover:text-white underline decoration-white/20 hover:decoration-white transition-all"
+                      >
+                        Wróć
+                      </button>
+                      
+                      {!challengeSolved && (
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); setChallengeSolved(true); setIsFlipped(false); }}
+                          className="bg-matura-accent text-matura-bg px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 hover:bg-yellow-400 transition-colors shadow-lg"
+                        >
+                          <Check size={14} /> Umiem to!
+                        </button>
+                      )}
+                   </div>
+                </div>
+             </div>
+          </div>
+
+          {/* Tip of the Day - VISIBILITY IMPROVED */}
+          <div className="bg-gradient-to-br from-yellow-500/5 to-orange-600/5 rounded-3xl p-6 border border-yellow-500/10 relative overflow-hidden flex flex-col justify-center shadow-lg h-auto min-h-[140px] group hover:border-yellow-500/30 transition-all duration-300">
+             <div className="absolute -right-4 -bottom-4 text-yellow-500/5 rotate-12 transform scale-150 pointer-events-none group-hover:text-yellow-500/10 transition-colors">
+               <Lightbulb size={100}/>
+             </div>
+             
+             <div className="flex items-center gap-2 text-yellow-400 text-xs font-bold uppercase tracking-widest mb-3">
+                <div className="bg-yellow-500/10 p-1.5 rounded-lg border border-yellow-500/20"><Lightbulb size={14} /></div> 
+                Pro Tip Egzaminatora
+             </div>
+             
+             <p className="text-gray-200 text-sm md:text-base font-medium leading-relaxed italic relative z-10 drop-shadow-sm group-hover:text-white transition-colors">
+               "{randomTip}"
+             </p>
+          </div>
+
+        </div>
+      </div>
+
+      {/* 2. Stats Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { label: 'Dni z rzędu', value: stats.streak, icon: Flame, color: 'text-orange-500', bg: 'bg-orange-500/10', border: 'border-orange-500/20' },
+          { label: 'Punkty XP', value: stats.xp, icon: Zap, color: 'text-yellow-400', bg: 'bg-yellow-400/10', border: 'border-yellow-400/20' },
+          { label: 'Ukończone Zadania', value: stats.completedTasks, icon: CheckCircle, color: 'text-green-500', bg: 'bg-green-500/10', border: 'border-green-500/20' },
+          { label: 'Błędy do poprawy', value: stats.mistakes.length, icon: AlertOctagon, color: 'text-red-500', bg: 'bg-red-500/10', border: 'border-red-500/20' },
+        ].map((stat, i) => (
+          <div key={i} className={`bg-[#112240] p-4 rounded-2xl border ${stat.border || 'border-white/5'} flex items-center gap-4 hover:bg-[#162a4d] transition-all hover:-translate-y-1 shadow-lg`}>
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${stat.bg} ${stat.color} shadow-inner`}>
+              <stat.icon size={24} />
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-white font-display">{stat.value}</div>
+              <div className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">{stat.label}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* 3. Main Split: Progress & Plan */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        {/* Left: Charts */}
+        <div className="lg:col-span-2 space-y-6">
+           {/* Module Progress */}
+           <div className="bg-[#112240]/80 backdrop-blur-md p-6 md:p-8 rounded-3xl border border-white/5 shadow-xl">
+             <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+               <Target size={20} className="text-matura-accent"/> Postęp w modułach
+             </h3>
+             <div className="h-64 w-full">
+               <ResponsiveContainer width="100%" height="100%">
+                 <BarChart data={chartData} layout="vertical" margin={{ top: 0, right: 30, left: 20, bottom: 0 }}>
+                   <XAxis type="number" domain={[0, 100]} hide />
+                   <YAxis dataKey="name" type="category" width={100} tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 'bold' }} />
+                   <Tooltip 
+                     cursor={{fill: '#ffffff05'}}
+                     contentStyle={{ backgroundColor: '#0A1628', borderColor: '#ffffff10', borderRadius: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}
+                     itemStyle={{ color: '#fff' }}
+                   />
+                   <Bar dataKey="progress" radius={[0, 6, 6, 0]} barSize={24} animationDuration={1500}>
+                     {chartData.map((entry, index) => (
+                       <Cell key={`cell-${index}`} fill={entry.color} className="opacity-80 hover:opacity-100 transition-opacity cursor-pointer" />
+                     ))}
+                   </Bar>
+                 </BarChart>
+               </ResponsiveContainer>
+             </div>
+           </div>
+
+           {/* Activity Heatmap */}
+           <div className="bg-[#112240] p-6 rounded-3xl border border-white/5 shadow-lg">
+             <h3 className="text-sm font-bold text-gray-400 mb-4 uppercase tracking-widest flex items-center gap-2">
+               <Clock size={16}/> Ostatnie 30 dni aktywności
+             </h3>
+             <div className="flex flex-wrap gap-2">
+               {heatmapDays.map((day, i) => (
+                 <div 
+                   key={i} 
+                   className={`w-3 h-3 md:w-4 md:h-4 rounded-md ${getHeatmapColor(day.level)} transition-all duration-500`}
+                   title={`${day.date}: ${day.level > 0 ? 'Aktywny' : 'Brak'}`}
+                 ></div>
+               ))}
+             </div>
+           </div>
+        </div>
+
+        {/* Right: Daily Plan */}
+        <div className="bg-[#112240] p-6 md:p-8 rounded-3xl border border-white/5 flex flex-col h-full shadow-xl relative overflow-hidden">
+           {/* Decor */}
+           <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/5 rounded-full blur-3xl"></div>
+
+           <div className="mb-6 relative z-10">
+             <h3 className="text-xl font-bold text-white flex items-center gap-2">
+               <BookOpen size={20} className="text-green-400"/> Twój Plan na Dziś
+             </h3>
+             <p className="text-sm text-gray-400 mt-1">Zalecane zadania, aby zdać maturę.</p>
+           </div>
+           
+           <div className="flex-1 space-y-4 relative z-10">
+             {dailyPlan.map((task, idx) => (
+               <div 
+                 key={idx} 
+                 className={`p-4 rounded-2xl border transition-all cursor-pointer group ${
+                   planCompleted[idx] 
+                     ? 'bg-green-500/10 border-green-500/20' 
+                     : 'bg-[#0A1628] border-white/5 hover:border-matura-accent/30 hover:bg-[#0E1A2E]'
+                 }`}
+                 onClick={() => handlePlanToggle(idx)}
+               >
+                 <div className="flex items-center gap-4">
+                   <button className={`flex-shrink-0 transition-colors transform group-hover:scale-110 ${planCompleted[idx] ? 'text-green-500' : 'text-gray-600 group-hover:text-matura-accent'}`}>
+                      {planCompleted[idx] ? <CheckSquare size={24}/> : <Square size={24}/>}
+                   </button>
+                   <div className="flex-1">
+                     <p className={`font-bold text-sm ${planCompleted[idx] ? 'text-gray-400 line-through' : 'text-white'}`}>
+                       {task.text}
+                     </p>
+                     {!planCompleted[idx] && (
+                       <button 
+                         onClick={(e) => { e.stopPropagation(); onNavigate(task.view); }}
+                         className="text-[10px] text-matura-accent font-bold uppercase tracking-wider mt-1 hover:underline flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                       >
+                         Rozpocznij <Target size={10}/>
+                       </button>
+                     )}
+                   </div>
+                 </div>
+               </div>
+             ))}
+             
+             {/* Extra motivator */}
+             {planCompleted.every(Boolean) && (
+               <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 p-4 rounded-2xl border border-green-500/30 text-center animate-slide-up shadow-lg">
+                  <Trophy size={24} className="text-green-400 mx-auto mb-2 animate-bounce"/>
+                  <p className="text-green-200 font-bold text-sm">Plan wykonany! Odpocznij.</p>
+               </div>
+             )}
+           </div>
+        </div>
+      </div>
+
+      {/* 4. Achievements List */}
+      <div className="mt-8">
+         <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2 px-2">
+           <Trophy size={20} className="text-yellow-500"/> Osiągnięcia
+         </h3>
+         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+           {ACHIEVEMENTS_LIST.slice(0, 8).map(ach => {
+             const isUnlocked = stats.unlockedAchievements.includes(ach.id);
+             
+             // Dynamic Icon Mapping
+             let Icon = Star;
+             if (ach.icon === 'Flame') Icon = Flame;
+             if (ach.icon === 'Zap') Icon = Zap;
+             if (ach.icon === 'BookA') Icon = BookA;
+             if (ach.icon === 'BookOpen') Icon = BookOpen;
+             if (ach.icon === 'Library') Icon = Library;
+             if (ach.icon === 'CheckCircle') Icon = CheckCircle;
+             if (ach.icon === 'Headphones') Icon = Headphones;
+             if (ach.icon === 'FileText') Icon = FileText;
+             if (ach.icon === 'PenTool') Icon = Trophy; 
+             if (ach.icon === 'GraduationCap') Icon = Trophy;
+             if (ach.icon === 'Award') Icon = Award;
+             if (ach.icon === 'Crown') Icon = Crown;
+             if (ach.icon === 'Moon') Icon = Moon;
+             if (ach.icon === 'Sun') Icon = Sun;
+             if (ach.icon === 'AlertOctagon') Icon = AlertOctagon;
+             if (ach.icon === 'Trash2') Icon = Trash2;
+
+             return (
+               <div key={ach.id} className={`p-4 rounded-2xl border flex items-center gap-4 transition-all ${
+                 isUnlocked 
+                   ? 'bg-[#112240] border-matura-accent/30 opacity-100 shadow-[0_0_15px_rgba(245,197,24,0.05)]' 
+                   : 'bg-[#0A1628] border-white/5 opacity-50 grayscale hover:grayscale-0 hover:opacity-80'
+               }`}>
+                 <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+                   isUnlocked ? 'bg-matura-accent text-matura-bg shadow-lg shadow-yellow-500/20' : 'bg-white/5 text-gray-500'
+                 }`}>
+                   <Icon size={18} />
+                 </div>
+                 <div className="min-w-0">
+                   <h4 className={`text-sm font-bold truncate ${isUnlocked ? 'text-white' : 'text-gray-500'}`}>{ach.title}</h4>
+                   <p className="text-[10px] text-gray-500 truncate">{ach.description}</p>
+                 </div>
+               </div>
+             );
+           })}
+         </div>
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
