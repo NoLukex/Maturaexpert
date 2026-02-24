@@ -3,7 +3,7 @@ export type ViewState = 'dashboard' | 'vocabulary' | 'grammar' | 'listening' | '
 
 export interface TaskResult {
   taskId: string;
-  module: 'vocabulary' | 'grammar' | 'listening' | 'reading' | 'writing' | 'exam';
+  module: 'vocabulary' | 'grammar' | 'listening' | 'reading' | 'writing' | 'exam' | 'speaking';
   score: number;
   maxScore: number;
   date: string;
@@ -40,9 +40,10 @@ export interface UserStats {
   level: string; // Calculated dynamically
   completedTasks: number;
   lastLogin: string;
+  updatedAt?: number;
   history: TaskResult[];
   activity: ActivityLog[];
-  mistakes: Mistake[]; 
+  mistakes: Mistake[];
   unlockedAchievements: string[]; // NEW: Persist IDs of unlocked achievements
   // Progress per module (0-100)
   moduleProgress: {
@@ -52,7 +53,13 @@ export interface UserStats {
     reading: number;
     writing: number;
     exam: number;
+    speaking: number;
   };
+}
+
+export interface AppPreferences {
+  soundEffects: boolean;
+  studyReminders: boolean;
 }
 
 export interface Flashcard {
@@ -91,6 +98,9 @@ export interface WritingTask {
   type: 'email_informal' | 'email_formal' | 'blog' | 'description';
   title: string;
   instruction: string; // The prompt in Polish
+  topic?: string;
+  minWords?: number;
+  maxWords?: number;
 }
 
 export interface WritingAssessment {
@@ -101,6 +111,27 @@ export interface WritingAssessment {
   suma: number;
   podsumowanie: string;
   wskazowki: string[];
+}
+
+export interface SpeakingCriterionAssessment {
+  score: number;
+  maxScore: number;
+  justification: string;
+}
+
+export interface SpeakingAssessment {
+  totalScore: number;
+  maxScore: number;
+  communication: SpeakingCriterionAssessment;
+  communicationTask1?: SpeakingCriterionAssessment;
+  communicationTask2?: SpeakingCriterionAssessment;
+  communicationTask3?: SpeakingCriterionAssessment;
+  lexicalRange: SpeakingCriterionAssessment;
+  grammaticalAccuracy: SpeakingCriterionAssessment;
+  pronunciation: SpeakingCriterionAssessment;
+  fluency: SpeakingCriterionAssessment;
+  strengths: string[];
+  improvements: string[];
 }
 
 export interface MockExam {

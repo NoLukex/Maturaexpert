@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" fill="none" stroke="black" stroke-width="5">
+  <!-- Left Lens -->
+  <ellipse cx="50" cy="50" rx="35" ry="25" />
+  <!-- Right Lens -->
+  <ellipse cx="150" cy="50" rx="35" ry="25" />
+  <!-- Bridge -->
+  <path d="M85 50 Q100 45 115 50" fill="none" />
+  <!-- Temples -->
+  <path d="M15 50 L0 40" />
+  <path d="M185 50 L200 40" />
+</svg>

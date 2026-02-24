@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/nvidia/(.*)",
+      "destination": "/api/nvidia?path=$1"
+    }
+  ]
+}

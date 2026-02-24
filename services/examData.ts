@@ -5,7 +5,9 @@ export interface ExamQuestion {
   text?: string;
   prefix?: string; // For gap fills/translations
   suffix?: string;
-  options?: string[]; // For multiple choice
+  options?: string[]; // For multiple choice (text)
+  optionsType?: 'text' | 'image'; // New field for image support
+  optionImages?: string[]; // Paths to images if optionsType is 'image'
   correctAnswer: string | string[] | number; // Support for multiple correct answers (open tasks)
 }
 
@@ -15,13 +17,14 @@ export interface ExamTask {
   type: 'true_false' | 'matching' | 'choice' | 'gapped_text' | 'open_cloze' | 'translation' | 'writing';
   instruction: string;
   score: number; // Max points for this task
-  
+
   // Content
   script?: string; // For listening
   readingText?: string; // For reading
+  taskImages?: string[]; // For official CKE image blocks
   readingParts?: { id: number | string, text: string }[]; // For matching reading
   extraOptions?: string[]; // For matching (A-F)
-  
+
   questions?: ExamQuestion[];
   writingTask?: WritingTask; // Specific structure for writing
 }
@@ -30,6 +33,13 @@ export interface FullExam {
   id: string;
   title: string;
   date: string;
+  formula?: '2023' | '2015' | 'mixed';
+  session?: 'maj' | 'czerwiec' | 'sierpien' | 'probna' | 'inna';
+  sourceType?: 'official' | 'adapted';
+  sourceUrl?: string;
+  answerKeyUrl?: string;
+  transcriptUrl?: string;
+  audioUrl?: string;
   totalScore: number;
   duration: number; // minutes
   sections: {
@@ -166,9 +176,9 @@ Tekst C: Commercial cleaning products are full of strong chemicals that are bad 
 
 Tekst D: I love fashion, but I know that the clothing industry creates a lot of waste. Instead of buying new clothes, I organize "clothes swap" parties with my friends. We bring items we don't wear anymore and exchange them. It's a great way to refresh my wardrobe for free!`,
             questions: [
-              { id: 1, text: '5.1. This text mentions a social event for exchanging items.', options: ['A','B','C','D'], correctAnswer: 'D' },
-              { id: 2, text: '5.2. This text describes saving money on a daily drink.', options: ['A','B','C','D'], correctAnswer: 'A' },
-              { id: 3, text: '5.3. This text is about making products at home.', options: ['A','B','C','D'], correctAnswer: 'C' },
+              { id: 1, text: '5.1. This text mentions a social event for exchanging items.', options: ['A', 'B', 'C', 'D'], correctAnswer: 'D' },
+              { id: 2, text: '5.2. This text describes saving money on a daily drink.', options: ['A', 'B', 'C', 'D'], correctAnswer: 'A' },
+              { id: 3, text: '5.3. This text is about making products at home.', options: ['A', 'B', 'C', 'D'], correctAnswer: 'C' },
               { id: 4, text: '5.4. (Tekst A) The author gets a ... when using their own cup.', correctAnswer: ['discount'] },
               { id: 5, text: '5.5. (Tekst B) The author stopped buying ... because of the plastic waste.', correctAnswer: ['bottled water', 'water bottles'] },
               { id: 6, text: '5.6. (Tekst C) The author uses vinegar and ... to clean.', correctAnswer: ['lemon juice', 'baking soda'] },

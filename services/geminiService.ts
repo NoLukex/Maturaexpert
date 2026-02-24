@@ -1,239 +1,280 @@
 
-import { GoogleGenAI, Type, Modality } from "@google/genai";
+import OpenAI from "openai";
+import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 import { WritingAssessment } from "../types";
+import { retryWithBackoff, handleAIError } from './errorService';
 
-// NOTE: In a production app, the API key should not be exposed on the client side this directly
-// or should be handled via a proxy. Since this is a pure frontend demo, we assume env var.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Configuration for NVIDIA NIM
+// Comprehensive API key lookup
+const getApiKey = () => {
+  // 1. Check Vite's import.meta.env (Client-side)
+  if (typeof import.meta !== 'undefined' && import.meta.env) {
+    if (import.meta.env.VITE_NVIDIA_API_KEY) return import.meta.env.VITE_NVIDIA_API_KEY;
+  }
+
+  // 2. Check process.env (Server-side/Build-time define)
+  if (typeof process !== 'undefined' && process.env) {
+    return process.env.VITE_NVIDIA_API_KEY || process.env.NVIDIA_API_KEY || '';
+  }
+
+  return '';
+};
+
+let apiKey = getApiKey();
+
+// OpenAI SDK requires an absolute URL or it might fail to construct the URL object internally
+const getBaseUrl = () => {
+  if (typeof window !== 'undefined') {
+    return `${window.location.origin}/api/nvidia`;
+  }
+  return 'http://localhost:3000/api/nvidia'; // Fallback for SSR/Test
+};
+
+const nvidia = new OpenAI({
+  apiKey: apiKey,
+  baseURL: getBaseUrl(), // Must be absolute for OpenAI SDK
+  dangerouslyAllowBrowser: true // Required for client-side demo
+});
+
+const DEFAULT_MODEL = "meta/llama-3.1-70b-instruct";
+
+const parseJsonObject = <T>(raw: string | null | undefined, fallback: T): T => {
+  if (!raw) return fallback;
+  try {
+    return JSON.parse(raw) as T;
+  } catch {
+    return fallback;
+  }
+};
 
 export interface ExamReport {
   summary: string;
   strengths: string[];
   weaknesses: string[];
   recommendations: string[];
-  prediction: string; 
+  prediction: string;
 }
 
-// --- AUDIO HELPERS ---
-
-function decode(base64: string) {
-  const binaryString = atob(base64);
-  const len = binaryString.length;
-  const bytes = new Uint8Array(len);
-  for (let i = 0; i < len; i++) {
-    bytes[i] = binaryString.charCodeAt(i);
+export const getCompletion = async (prompt: string, jsonMode: boolean = false): Promise<string> => {
+  try {
+    return await retryWithBackoff(async () => {
+      const response = await nvidia.chat.completions.create({
+        model: DEFAULT_MODEL,
+        messages: [{ role: "user", content: prompt }],
+        response_format: jsonMode ? { type: "json_object" } : undefined
+      });
+      return response.choices[0]?.message?.content || "";
+    });
+  } catch (error) {
+    throw handleAIError(error);
   }
-  return bytes;
-}
+};
 
-async function decodeAudioData(
-  data: Uint8Array,
-  ctx: AudioContext,
-  sampleRate: number,
-  numChannels: number,
-): Promise<AudioBuffer> {
-  const dataInt16 = new Int16Array(data.buffer);
-  const frameCount = dataInt16.length / numChannels;
-  const buffer = ctx.createBuffer(numChannels, frameCount, sampleRate);
+export const getChatCompletion = async (systemInstruction: string, history: { role: 'user' | 'assistant', content: string }[], userMessage: string): Promise<string> => {
+  try {
+    return await retryWithBackoff(async () => {
+      const messages: ChatCompletionMessageParam[] = [
+        { role: "system", content: systemInstruction },
+        ...history,
+        { role: "user", content: userMessage }
+      ];
 
-  for (let channel = 0; channel < numChannels; channel++) {
-    const channelData = buffer.getChannelData(channel);
-    for (let i = 0; i < frameCount; i++) {
-      channelData[i] = dataInt16[i * numChannels + channel] / 32768.0;
+      const response = await nvidia.chat.completions.create({
+        model: DEFAULT_MODEL,
+        messages: messages
+      });
+      return response.choices[0]?.message?.content || "";
+    });
+  } catch (error) {
+    throw handleAIError(error);
+  }
+};
+
+// --- AUDIO HELPERS (Fallback to Browser TTS) ---
+
+
+let preferredVoiceName: string | null = null;
+let useCloudTTS = false;
+
+export const getAvailableVoices = (): SpeechSynthesisVoice[] => {
+  return window.speechSynthesis.getVoices();
+};
+
+export const setPreferredVoice = (voiceName: string) => {
+  preferredVoiceName = voiceName;
+};
+
+export const setTTSMode = (hq: boolean) => {
+  useCloudTTS = hq;
+};
+
+const speakWithCloud = async (text: string, onEnded?: () => void) => {
+  const encoded = encodeURIComponent(text.substring(0, 200));
+  const url = `/api/tts?ie=UTF-8&q=${encoded}&tl=en&client=tw-ob`;
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Cloud TTS Fetch failed: ${response.status}`);
     }
-  }
-  return buffer;
-}
 
-let audioCtx: AudioContext | null = null;
+    const blob = await response.blob();
+    if (blob.size < 100) {
+      throw new Error("Invalid audio data from cloud.");
+    }
+
+    const audioUrl = URL.createObjectURL(blob);
+    const audio = new Audio(audioUrl);
+
+    audio.onended = () => {
+      URL.revokeObjectURL(audioUrl);
+      if (onEnded) onEnded();
+    };
+    audio.onerror = () => {
+      URL.revokeObjectURL(audioUrl);
+      speakWithBrowser(text, onEnded);
+    };
+
+    await audio.play();
+    return () => {
+      audio.pause();
+      URL.revokeObjectURL(audioUrl);
+    };
+  } catch (err) {
+    console.error("TTS: Cloud Error:", err);
+    return speakWithBrowser(text, onEnded);
+  }
+};
 
 const speakWithBrowser = (text: string, onEnded?: () => void) => {
-  window.speechSynthesis.cancel(); // Cancel any previous
+  if (typeof window === 'undefined' || !window.speechSynthesis) {
+    if (onEnded) onEnded();
+    return () => { };
+  }
+
+  window.speechSynthesis.cancel();
+
   const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'en-GB'; // British accent for CKE vibe
-  u.rate = 0.9;
-  u.onend = () => { if(onEnded) onEnded() };
-  u.onerror = (e) => { console.error("Browser TTS error", e); if(onEnded) onEnded(); };
+  u.lang = 'en-US';
+  u.rate = 1.0;
+  u.pitch = 1.0;
+
+  const voices = window.speechSynthesis.getVoices();
+  let voice: SpeechSynthesisVoice | undefined;
+
+  if (preferredVoiceName) {
+    voice = voices.find(v => v.name === preferredVoiceName);
+  }
+
+  if (!voice) {
+    voice = voices.find(v => v.name.includes("Google US English")) ||
+      voices.find(v => v.name.includes("English (United States)")) ||
+      voices.find(v => v.name.includes("Microsoft Zira")) ||
+      voices.find(v => v.name.includes("Natural")) ||
+      voices.find(v => v.lang.startsWith("en-US")) ||
+      voices.find(v => v.lang.startsWith("en-GB")) ||
+      voices.find(v => v.lang.startsWith("en"));
+  }
+
+  if (voice) {
+    u.voice = voice;
+  }
+
+  u.onend = () => {
+    if (onEnded) onEnded();
+  };
+  u.onerror = (e) => {
+    console.error("TTS: Browser Error:", e);
+    if (onEnded) onEnded();
+  };
+
   window.speechSynthesis.speak(u);
   return () => window.speechSynthesis.cancel();
 };
 
 export const playTextToSpeech = async (text: string, onEnded?: () => void): Promise<() => void> => {
-  try {
-    // 1. Try Google Gemini TTS First
-    if (!process.env.API_KEY) throw new Error("No API Key");
-
-    if (!audioCtx) {
-      audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)({sampleRate: 24000});
+  if (useCloudTTS) {
+    try {
+      return speakWithCloud(text, onEnded);
+    } catch (err) {
+      return speakWithBrowser(text, onEnded);
     }
-    
-    // CRITICAL: Resume context if suspended (browser autoplay policy)
-    if (audioCtx.state === 'suspended') {
-      await audioCtx.resume();
-    }
-
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash-preview-tts",
-      contents: [{ parts: [{ text }] }],
-      config: {
-        responseModalities: [Modality.AUDIO],
-        speechConfig: {
-            voiceConfig: {
-              prebuiltVoiceConfig: { voiceName: 'Kore' }, // Kore is good for exams
-            },
-        },
-      },
-    });
-
-    const base64Audio = response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
-    if (!base64Audio) throw new Error("No audio data returned from API");
-
-    const audioBuffer = await decodeAudioData(
-      decode(base64Audio),
-      audioCtx,
-      24000,
-      1
-    );
-
-    const source = audioCtx.createBufferSource();
-    source.buffer = audioBuffer;
-    const outputNode = audioCtx.createGain();
-    source.connect(outputNode);
-    outputNode.connect(audioCtx.destination);
-    
-    source.onended = () => {
-      if (onEnded) onEnded();
-    };
-    
-    source.start();
-
-    // Return a function to stop the audio
-    return () => {
-      try {
-        source.stop();
-      } catch(e) {
-        // Ignore errors if already stopped
-      }
-    };
-
-  } catch (error) {
-    console.warn("AI TTS Error (Falling back to browser):", error);
-    // 2. Fallback to Browser Native TTS
-    return speakWithBrowser(text, onEnded);
   }
+
+  if (window.speechSynthesis.getVoices().length === 0) {
+    await new Promise<void>(resolve => {
+      window.speechSynthesis.onvoiceschanged = () => {
+        resolve();
+      };
+      setTimeout(resolve, 1500);
+    });
+  }
+  return speakWithBrowser(text, onEnded);
 };
 
-// --- EXISTING WRITING & EXAM LOGIC ---
+// --- GRADING & REPORT LOGIC ---
 
 export const gradeWritingTask = async (topic: string, studentText: string): Promise<WritingAssessment> => {
   try {
+    if (!apiKey || apiKey.includes("TWÓJ_KLUCZ")) {
+      throw new Error("Missing NVIDIA API Key");
+    }
+
     const prompt = `
       Jesteś surowym, certyfikowanym egzaminatorem CKE (Centralna Komisja Egzaminacyjna). 
       Twoim zadaniem jest ocena pracy pisemnej z języka angielskiego na poziomie Matury Podstawowej.
       
       ZASADY OCENIANIA (Strict CKE Rules):
+      1. LIMITY SŁÓW (80-130 słów).
+      2. KRYTERIUM TREŚĆ (0-4 pkt).
+      3. KRYTERIUM SPÓJNOŚĆ I LOGIKA (0-2 pkt).
+      4. ZAKRES ŚRODKÓW JĘZYKOWYCH (0-2 pkt).
+      5. POPRAWNOŚĆ ŚRODKÓW JĘZYKOWYCH (0-2 pkt).
 
-      1. LIMITY SŁÓW (80-130 słów):
-         - Praca powinna mieć od 80 do 130 słów.
-         - < 80 słów: Jeśli praca jest za krótka, uczeń nie ma szansy w pełni rozwinąć punktów ani pokazać zakresu środków językowych. Obniż punkty w kryterium TREŚĆ i ZAKRES.
-         - > 140 słów: CKE nie odejmuje punktów "za karę", ALE jeśli praca jest zbyt długa, często zawiera dygresje, powtórzenia lub błędy. Jeśli tekst jest rozwlekły i przekracza 140 słów, OBNIŻ ocenę za SPÓJNOŚĆ I LOGIKĘ (za zaburzenie proporcji lub brak zwięzłości) i dodaj ostrzeżenie w podsumowaniu.
-
-      2. KRYTERIUM TREŚĆ (0-4 pkt):
-         W poleceniu są ZAWSZE 4 podpunkty (kropki). Sprawdź każdy z nich:
-         - Uczeń musi się do kropki ODNIEŚĆ (napisać o tym) i ją ROZWINĄĆ (dodać szczegół, uzasadnienie, opis).
-         - 4 pkt: 4 elementy rozwinięte.
-         - 3 pkt: 3 el. rozwinięte LUB 4 el. odniesione (bez rozwinięcia wszystkich).
-         - 2 pkt: 2 el. rozwinięte LUB 3 el. odniesione.
-         - 1 pkt: 1 el. rozwinięty LUB 2 el. odniesione.
-         - 0 pkt: Praca nie na temat lub brak realizacji polecenia.
-
-      3. KRYTERIUM SPÓJNOŚĆ I LOGIKA (0-2 pkt):
-         - 2 pkt: Tekst jest w pełni spójny, logiczny, posiada wstęp i zakończenie.
-         - 1 pkt: Drobne usterki w spójności (np. brak zdań łączących, nagłe przeskoki, dygresje - w tym za duża długość).
-         - 0 pkt: Tekst niespójny.
-         *Zasada CKE*: Jeśli za TREŚĆ jest 0 lub 1 pkt, za SPÓJNOŚĆ można dać max 1 pkt.
-
-      4. ZAKRES ŚRODKÓW JĘZYKOWYCH (0-2 pkt):
-         - 2 pkt: Zróżnicowane słownictwo i struktury (jak na poziom A2/B1).
-         - 1 pkt: Słownictwo ubogie, powtarzające się.
-         - 0 pkt: Bardzo ubogi zasób słów.
-         *Zasada CKE*: Jeśli za TREŚĆ jest 0 lub 1 pkt, za ZAKRES można dać max 1 pkt.
-
-      5. POPRAWNOŚĆ ŚRODKÓW JĘZYKOWYCH (0-2 pkt):
-         - 2 pkt: Błędy nieliczne, nie zakłócają komunikacji.
-         - 1 pkt: Błędy zakłócają komunikację czasami.
-         - 0 pkt: Błędy uniemożliwiają zrozumienie.
-         *Zasada CKE*: Jeśli za TREŚĆ jest 0 lub 1 pkt, za POPRAWNOŚĆ można dać max 1 pkt.
-
-      TWOJE ZADANIE:
-      Oceń poniższą pracę. Bądź konkretny. Wskaż, które kropki zostały rozwinięte, a które tylko "tknięte". Wypisz błędy.
-      Komentarze pisz po POLSKU.
-
-      TREŚĆ ZADANIA (z podpunktami do sprawdzenia):
+      TREŚĆ ZADANIA:
       ${topic}
 
       PRACA UCZNIA:
       "${studentText}"
+
+      ODPOWIEDZ WYŁĄCZNIE W FORMACIE JSON:
+      {
+        "tresc": { "punkty": number, "komentarz": "string" },
+        "spojnosc": { "punkty": number, "komentarz": "string" },
+        "zakres": { "punkty": number, "komentarz": "string" },
+        "poprawnosc": { "punkty": number, "komentarz": "string", "bledy": ["string"] },
+        "suma": number,
+        "podsumowanie": "string",
+        "wskazowki": ["string"]
+      }
     `;
 
-    const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            tresc: {
-              type: Type.OBJECT,
-              properties: {
-                punkty: { type: Type.INTEGER },
-                komentarz: { type: Type.STRING }
-              }
-            },
-            spojnosc: {
-              type: Type.OBJECT,
-              properties: {
-                punkty: { type: Type.INTEGER },
-                komentarz: { type: Type.STRING }
-              }
-            },
-            zakres: {
-              type: Type.OBJECT,
-              properties: {
-                punkty: { type: Type.INTEGER },
-                komentarz: { type: Type.STRING }
-              }
-            },
-            poprawnosc: {
-              type: Type.OBJECT,
-              properties: {
-                punkty: { type: Type.INTEGER },
-                komentarz: { type: Type.STRING },
-                bledy: { type: Type.ARRAY, items: { type: Type.STRING } }
-              }
-            },
-            suma: { type: Type.INTEGER },
-            podsumowanie: { type: Type.STRING },
-            wskazowki: { type: Type.ARRAY, items: { type: Type.STRING } }
-          }
-        }
-      }
+    const response = await nvidia.chat.completions.create({
+      model: DEFAULT_MODEL,
+      messages: [{ role: "user", content: prompt }],
+      response_format: { type: "json_object" }
     });
 
-    const jsonText = response.text || "{}";
-    return JSON.parse(jsonText) as WritingAssessment;
+    const jsonText = response.choices[0]?.message?.content;
+    return parseJsonObject<WritingAssessment>(jsonText, {
+      tresc: { punkty: 0, komentarz: "Brak danych z AI." },
+      spojnosc: { punkty: 0, komentarz: "Brak danych z AI." },
+      zakres: { punkty: 0, komentarz: "Brak danych z AI." },
+      poprawnosc: { punkty: 0, komentarz: "Brak danych z AI.", bledy: [] },
+      suma: 0,
+      podsumowanie: "Nie udalo sie odczytac oceny AI.",
+      wskazowki: ["Sprobuj ponownie za chwile."]
+    });
   } catch (error) {
-    console.error("AI Grading Error:", error);
-    // Fallback mock response if API fails or key is missing
+    console.error("NVIDIA AI Grading Error:", error);
     return {
-      tresc: { punkty: 0, komentarz: "Błąd połączenia z AI. Sprawdź klucz API." },
+      tresc: { punkty: 0, komentarz: "Błąd połączenia z NVIDIA AI. Sprawdź klucz API." },
       spojnosc: { punkty: 0, komentarz: "-" },
       zakres: { punkty: 0, komentarz: "-" },
       poprawnosc: { punkty: 0, komentarz: "-", bledy: [] },
       suma: 0,
       podsumowanie: "Wystąpił błąd techniczny. Spróbuj ponownie później.",
-      wskazowki: ["Sprawdź połączenie internetowe."]
+      wskazowki: ["Sprawdź połączenie internetowe i klucz NVIDIA_API_KEY."]
     };
   }
 };
@@ -242,7 +283,7 @@ export const generateExamReport = async (
   examTitle: string,
   totalScore: number,
   maxScore: number,
-  mistakes: string[], 
+  mistakes: string[],
   writingScore: number
 ): Promise<ExamReport> => {
   try {
@@ -254,7 +295,7 @@ export const generateExamReport = async (
       Pisanie: ${writingScore}/12
       Błędy w zadaniach: ${mistakes.join(', ')}
       
-      JSON:
+      ODPOWIEDZ WYŁĄCZNIE W FORMACIE JSON:
       {
         "summary": "...",
         "strengths": ["..."],
@@ -264,29 +305,23 @@ export const generateExamReport = async (
       }
     `;
 
-    const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            summary: { type: Type.STRING },
-            strengths: { type: Type.ARRAY, items: { type: Type.STRING } },
-            weaknesses: { type: Type.ARRAY, items: { type: Type.STRING } },
-            recommendations: { type: Type.ARRAY, items: { type: Type.STRING } },
-            prediction: { type: Type.STRING }
-          }
-        }
-      }
+    const response = await nvidia.chat.completions.create({
+      model: DEFAULT_MODEL,
+      messages: [{ role: "user", content: prompt }],
+      response_format: { type: "json_object" }
     });
 
-    const jsonText = response.text || "{}";
-    return JSON.parse(jsonText) as ExamReport;
+    const jsonText = response.choices[0]?.message?.content;
+    return parseJsonObject<ExamReport>(jsonText, {
+      summary: "Raport nie zostal wygenerowany poprawnie.",
+      strengths: ["Ukonczenie pelnego arkusza"],
+      weaknesses: ["Brak szczegolowej analizy AI"],
+      recommendations: ["Powtorz probny arkusz i sprawdz wynik ponownie."],
+      prediction: "Jestes na dobrej drodze - cwicz regularnie."
+    });
 
   } catch (error) {
-    console.error("Report Generation Error:", error);
+    console.error("NVIDIA Report Generation Error:", error);
     return {
       summary: "Gratulacje ukończenia egzaminu! Twój wynik jest widoczny powyżej.",
       strengths: ["Ukończenie pełnego arkusza", "Próba sił z pisaniem"],

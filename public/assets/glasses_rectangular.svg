@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" fill="none" stroke="black" stroke-width="5">
+  <!-- Left Lens -->
+  <rect x="20" y="30" width="60" height="40" rx="5" />
+  <!-- Right Lens -->
+  <rect x="120" y="30" width="60" height="40" rx="5" />
+  <!-- Bridge -->
+  <path d="M80 50 L120 50" fill="none" />
+  <!-- Temples -->
+  <path d="M20 50 L0 40" />
+  <path d="M180 50 L200 40" />
+</svg>

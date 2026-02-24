@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import { getStats, removeMistake } from '../services/storageService';
+import { getStats, removeMistake, STATS_UPDATED_EVENT } from '../services/storageService';
 import { Mistake } from '../types';
-import { AlertOctagon, Trash2, CheckCircle2, RefreshCw } from 'lucide-react';
+import { AlertOctagon, Trash2, CheckCircle2 } from 'lucide-react';
 
 const Mistakes: React.FC = () => {
   const [mistakes, setMistakes] = useState<Mistake[]>([]);
@@ -13,8 +13,21 @@ const Mistakes: React.FC = () => {
       setMistakes(stats.mistakes || []);
     };
     loadData();
-    
-    // Add event listener for local storage changes if needed, but for now direct load is ok on mount
+
+    const handleStatsUpdate = () => loadData();
+    const handleStorageUpdate = (event: StorageEvent) => {
+      if (event.key === 'matura_master_stats' || event.key === null) {
+        loadData();
+      }
+    };
+
+    window.addEventListener(STATS_UPDATED_EVENT, handleStatsUpdate);
+    window.addEventListener('storage', handleStorageUpdate);
+
+    return () => {
+      window.removeEventListener(STATS_UPDATED_EVENT, handleStatsUpdate);
+      window.removeEventListener('storage', handleStorageUpdate);
+    };
   }, []);
 
   const handleDelete = (id: string) => {

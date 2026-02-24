@@ -1,53 +1,132 @@
 
-import { UserStats, Flashcard, TaskResult, ActivityLog, Mistake, Achievement } from '../types';
+import { UserStats, Flashcard, TaskResult, ActivityLog, Mistake, Achievement, AppPreferences } from '../types';
 import { INITIAL_FLASHCARDS } from './vocabularyData';
 
 const STATS_KEY = 'matura_master_stats';
 const FLASHCARDS_KEY = 'matura_master_flashcards';
 const VOCAB_INDICES_KEY = 'matura_master_vocab_indices';
 const DAILY_PLAN_KEY = 'matura_master_daily_plan_v1';
+const PREFERENCES_KEY = 'matura_master_preferences_v1';
+const REMINDER_LAST_SHOWN_KEY = 'matura_master_last_reminder_v1';
 
-// Helper to generate a fake activity history for the demo to look "lived in"
-const generateMockActivity = (): ActivityLog[] => {
-  const activity: ActivityLog[] = [];
-  const today = new Date();
-  for (let i = 30; i >= 0; i--) {
-    const d = new Date(today);
-    d.setDate(d.getDate() - i);
-    // Random activity
-    if (Math.random() > 0.4) {
-      activity.push({
-        date: d.toISOString().split('T')[0],
-        count: Math.floor(Math.random() * 4) + 1
-      });
-    }
-  }
-  return activity;
+export const STATS_UPDATED_EVENT = 'stats-updated';
+export const FLASHCARDS_UPDATED_EVENT = 'flashcards-updated';
+
+const DEFAULT_PREFERENCES: AppPreferences = {
+  soundEffects: true,
+  studyReminders: true
 };
 
-// Start with lastLogin as yesterday to guarantee a streak update on first load for demo purposes
-const yesterday = new Date();
-yesterday.setDate(yesterday.getDate() - 1);
+const pad2 = (value: number): string => String(value).padStart(2, '0');
+
+export const getLocalDateKey = (date: Date = new Date()): string => {
+  if (Number.isNaN(date.getTime())) return '';
+  return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
+};
+
+const getPreviousLocalDateKey = (date: Date = new Date()): string => {
+  const d = new Date(date);
+  d.setDate(d.getDate() - 1);
+  return getLocalDateKey(d);
+};
 
 const INITIAL_STATS: UserStats = {
   name: 'Mateusz Wiśniewski',
-  xp: 1250,
-  streak: 5,
-  level: 'Elementary (A2)',
-  completedTasks: 4,
-  lastLogin: yesterday.toISOString(), // Set to yesterday to trigger streak increment
+  xp: 0,
+  streak: 0,
+  level: 'Starter (A0)',
+  completedTasks: 0,
+  lastLogin: '',
+  updatedAt: Date.now(),
   history: [],
   mistakes: [], 
   unlockedAchievements: [], // Start empty
-  activity: generateMockActivity(),
+  activity: [],
   moduleProgress: {
-    vocabulary: 15,
-    grammar: 10,
-    listening: 5,
-    reading: 10,
+    vocabulary: 0,
+    grammar: 0,
+    listening: 0,
+    reading: 0,
     writing: 0,
-    exam: 0
+    exam: 0,
+    speaking: 0
   }
+};
+
+interface FlashcardsStore {
+  items: Flashcard[];
+  updatedAt: number;
+}
+
+const MODULE_PROGRESS_TARGETS: Record<Exclude<TaskResult['module'], 'vocabulary'>, number> = {
+  grammar: 20,
+  listening: 12,
+  reading: 12,
+  writing: 8,
+  exam: 4,
+  speaking: 4
+};
+
+const computeProgressFromHistory = (history: TaskResult[], current: UserStats['moduleProgress']): UserStats['moduleProgress'] => {
+  const next: UserStats['moduleProgress'] = {
+    vocabulary: current.vocabulary || 0,
+    grammar: 0,
+    listening: 0,
+    reading: 0,
+    writing: 0,
+    exam: 0,
+    speaking: 0
+  };
+
+  (Object.keys(MODULE_PROGRESS_TARGETS) as Array<Exclude<TaskResult['module'], 'vocabulary'>>).forEach((module) => {
+    const attempts = history.filter((entry) => entry.module === module).length;
+    const target = MODULE_PROGRESS_TARGETS[module] || 1;
+    const computed = Math.min(100, Math.round((attempts / target) * 100));
+    next[module] = computed;
+  });
+
+  return next;
+};
+
+const computeCompletedTasks = (history: TaskResult[]): number => {
+  return history.length;
+};
+
+const sanitizeActivity = (activity: ActivityLog[]): ActivityLog[] => {
+  const merged = new Map<string, number>();
+  activity.forEach((entry) => {
+    if (!entry || typeof entry.date !== 'string') return;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(entry.date)) return;
+    const current = merged.get(entry.date) || 0;
+    const nextCount = Math.max(0, Math.min(4, Number(entry.count) || 0));
+    merged.set(entry.date, Math.max(current, nextCount));
+  });
+  return Array.from(merged.entries())
+    .map(([date, count]) => ({ date, count }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+};
+
+const deriveStreakFromActivity = (activity: ActivityLog[]): number => {
+  const days = new Set(activity.filter((entry) => entry.count > 0).map((entry) => entry.date));
+  let streak = 0;
+  const cursor = new Date();
+
+  while (true) {
+    const key = getLocalDateKey(cursor);
+    if (!days.has(key)) break;
+    streak += 1;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+
+  return streak;
+};
+
+const computeXpFromData = (history: TaskResult[], flashcards: Flashcard[]): number => {
+  const fromHistory = history.reduce((sum, entry) => sum + Math.ceil(Math.max(0, entry.score) * 2.5), 0);
+  const mastered = flashcards.filter((card) => card.status === 'mastered').length;
+  const learning = flashcards.filter((card) => card.status === 'learning').length;
+  const fromVocab = mastered * 5 + learning * 2;
+  return fromHistory + fromVocab;
 };
 
 // --- ACHIEVEMENTS DEFINITION (20 ITEMS) ---
@@ -110,41 +189,126 @@ export const getDaysToMatura = (): number => {
 export const getStats = (): UserStats => {
   const stored = localStorage.getItem(STATS_KEY);
   let stats: UserStats;
+  let shouldPersist = false;
 
   if (!stored) {
     stats = { ...INITIAL_STATS };
+    shouldPersist = true;
   } else {
-    stats = JSON.parse(stored);
-    if (!stats.mistakes) stats.mistakes = [];
-    if (!stats.unlockedAchievements) stats.unlockedAchievements = [];
+    stats = safeParse<UserStats>(stored, { ...INITIAL_STATS });
+    if (!stats.mistakes) {
+      stats.mistakes = [];
+      shouldPersist = true;
+    }
+    if (!stats.unlockedAchievements) {
+      stats.unlockedAchievements = [];
+      shouldPersist = true;
+    }
+    if (!stats.activity) {
+      stats.activity = [];
+      shouldPersist = true;
+    }
+    if (!stats.moduleProgress) {
+      stats.moduleProgress = { ...INITIAL_STATS.moduleProgress };
+      shouldPersist = true;
+    }
+    if (typeof stats.moduleProgress.speaking !== 'number') {
+      stats.moduleProgress.speaking = 0;
+      shouldPersist = true;
+    }
   }
 
-  // Handle Streak Logic
-  const now = new Date();
-  const todayStr = now.toISOString().split('T')[0];
-  const lastLoginDate = new Date(stats.lastLogin);
-  const lastLoginStr = lastLoginDate.toISOString().split('T')[0];
+  // Legacy demo-data migration: reset inflated demo counters
+  const isLegacyDemoSeed =
+    (stats.xp >= 1200 && stats.level === 'Elementary (A2)' && stats.completedTasks <= 6) ||
+    (stats.history.length === 0 && stats.activity.length >= 10);
 
-  if (todayStr !== lastLoginStr) {
-    const yesterdayDate = new Date(now);
-    yesterdayDate.setDate(yesterdayDate.getDate() - 1);
-    const yesterdayStr = yesterdayDate.toISOString().split('T')[0];
+  if (isLegacyDemoSeed) {
+    stats.xp = 0;
+    stats.streak = 0;
+    stats.completedTasks = 0;
+    stats.activity = [];
+    stats.lastLogin = '';
+    stats.moduleProgress = {
+      vocabulary: 0,
+      grammar: 0,
+      listening: 0,
+      reading: 0,
+      writing: 0,
+      exam: 0,
+      speaking: 0
+    };
+    shouldPersist = true;
+  }
 
-    if (lastLoginStr === yesterdayStr) {
-      stats.streak += 1;
-    } else if (lastLoginStr !== todayStr) {
-       if (new Date(lastLoginStr) < yesterdayDate) {
-         stats.streak = 1;
-       }
+  const flashcards = getFlashcards();
+  const masteredCount = flashcards.filter((card) => card.status === 'mastered').length;
+  const vocabProgress = flashcards.length > 0 ? Math.round((masteredCount / flashcards.length) * 100) : 0;
+
+  const sanitizedActivity = sanitizeActivity(stats.activity || []);
+  if (JSON.stringify(stats.activity || []) !== JSON.stringify(sanitizedActivity)) {
+    stats.activity = sanitizedActivity;
+    shouldPersist = true;
+  }
+
+  const shouldResetEmptyProfile = stats.history.length === 0 && vocabProgress === 0;
+  if (shouldResetEmptyProfile) {
+    if (stats.xp !== 0) {
+      stats.xp = 0;
+      shouldPersist = true;
     }
-    
-    stats.lastLogin = now.toISOString();
-    
-    const existingActivity = stats.activity.find(a => a.date === todayStr);
-    if (!existingActivity) {
-      stats.activity.push({ date: todayStr, count: 1 });
+    if (stats.streak !== 0) {
+      stats.streak = 0;
+      shouldPersist = true;
     }
-    
+    if (stats.activity.length !== 0) {
+      stats.activity = [];
+      shouldPersist = true;
+    }
+  }
+
+  const normalizedProgress = computeProgressFromHistory(stats.history || [], {
+    ...stats.moduleProgress,
+    vocabulary: vocabProgress
+  });
+  const normalizedCompletedTasks = computeCompletedTasks(stats.history || []);
+  const normalizedLevel = calculateLevel(normalizedProgress);
+  const normalizedStreak = deriveStreakFromActivity(stats.activity || []);
+  const normalizedXP = computeXpFromData(stats.history || [], flashcards);
+
+  const progressChanged = JSON.stringify(stats.moduleProgress) !== JSON.stringify(normalizedProgress);
+  if (progressChanged) {
+    stats.moduleProgress = normalizedProgress;
+    shouldPersist = true;
+  }
+
+  if ((stats.completedTasks || 0) !== normalizedCompletedTasks) {
+    stats.completedTasks = normalizedCompletedTasks;
+    shouldPersist = true;
+  }
+
+  if ((stats.level || '') !== normalizedLevel) {
+    stats.level = normalizedLevel;
+    shouldPersist = true;
+  }
+
+  if ((stats.streak || 0) !== normalizedStreak) {
+    stats.streak = normalizedStreak;
+    shouldPersist = true;
+  }
+
+  if ((stats.xp || 0) !== normalizedXP) {
+    stats.xp = normalizedXP;
+    shouldPersist = true;
+  }
+
+  const withAchievements = checkAchievements(stats);
+  if (withAchievements !== stats) {
+    stats = withAchievements;
+    shouldPersist = true;
+  }
+
+  if (shouldPersist) {
     saveStats(stats);
   }
 
@@ -152,7 +316,55 @@ export const getStats = (): UserStats => {
 };
 
 const saveStats = (stats: UserStats) => {
-  localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+  const payload: UserStats = {
+    ...stats,
+    updatedAt: Date.now()
+  };
+  localStorage.setItem(STATS_KEY, JSON.stringify(payload));
+  window.dispatchEvent(new CustomEvent(STATS_UPDATED_EVENT, { detail: payload }));
+};
+
+const touchDailyActivity = (stats: UserStats, intensityStep: number = 1): Pick<UserStats, 'activity' | 'streak' | 'lastLogin'> => {
+  const now = new Date();
+  const today = getLocalDateKey(now);
+  const lastLoginDate = new Date(stats.lastLogin);
+  const lastLoginDay = getLocalDateKey(lastLoginDate);
+  const yesterday = getPreviousLocalDateKey(now);
+
+  const activity = [...(stats.activity || [])];
+  const activityIndex = activity.findIndex((entry) => entry.date === today);
+  if (activityIndex >= 0) {
+    activity[activityIndex] = {
+      ...activity[activityIndex],
+      count: Math.min(4, activity[activityIndex].count + Math.max(1, intensityStep))
+    };
+  } else {
+    activity.push({ date: today, count: Math.min(4, Math.max(1, intensityStep)) });
+  }
+
+  let streak = stats.streak || 0;
+  if (lastLoginDay !== today) {
+    if (lastLoginDay === yesterday) {
+      streak += 1;
+    } else {
+      streak = 1;
+    }
+  }
+
+  return {
+    activity,
+    streak,
+    lastLogin: now.toISOString()
+  };
+};
+
+const safeParse = <T>(raw: string | null, fallback: T): T => {
+  if (!raw) return fallback;
+  try {
+    return JSON.parse(raw) as T;
+  } catch {
+    return fallback;
+  }
 };
 
 // Check for new achievements and return the updated stats object
@@ -195,22 +407,10 @@ export const updateStats = (newStats: Partial<UserStats>) => {
 export const addXP = (amount: number) => {
   const current = getStats();
   const newXP = current.xp + amount;
-  
-  const today = new Date().toISOString().split('T')[0];
-  const activityIndex = current.activity.findIndex(a => a.date === today);
-  
-  const newActivity = [...current.activity];
-  if (activityIndex >= 0) {
-    newActivity[activityIndex] = {
-        ...newActivity[activityIndex],
-        count: Math.min(4, newActivity[activityIndex].count + 1)
-    };
-  } else {
-    newActivity.push({ date: today, count: 1 });
-  }
+  const activityPatch = touchDailyActivity(current, 1);
 
   // updateStats will handle achievement checks
-  updateStats({ xp: newXP, activity: newActivity });
+  updateStats({ xp: newXP, ...activityPatch });
   return newXP;
 };
 
@@ -226,24 +426,80 @@ const calculateLevel = (progress: UserStats['moduleProgress']): string => {
   return 'Matura Ready (B1/B2) 🎓';
 };
 
+export const getPreferences = (): AppPreferences => {
+  const stored = safeParse<Partial<AppPreferences>>(localStorage.getItem(PREFERENCES_KEY), {});
+  return {
+    soundEffects: stored.soundEffects ?? DEFAULT_PREFERENCES.soundEffects,
+    studyReminders: stored.studyReminders ?? DEFAULT_PREFERENCES.studyReminders
+  };
+};
+
+export const updatePreferences = (patch: Partial<AppPreferences>) => {
+  const current = getPreferences();
+  const updated: AppPreferences = { ...current, ...patch };
+  localStorage.setItem(PREFERENCES_KEY, JSON.stringify(updated));
+  return updated;
+};
+
+export const shouldShowStudyReminder = (): boolean => {
+  const prefs = getPreferences();
+  if (!prefs.studyReminders) return false;
+
+  const today = getLocalDateKey(new Date());
+  const lastShown = localStorage.getItem(REMINDER_LAST_SHOWN_KEY);
+  if (lastShown === today) return false;
+
+  localStorage.setItem(REMINDER_LAST_SHOWN_KEY, today);
+  return true;
+};
+
+export const playFeedbackSound = (kind: 'success' | 'error' = 'success') => {
+  const { soundEffects } = getPreferences();
+  if (!soundEffects || typeof window === 'undefined') return;
+
+  try {
+    const AudioCtx = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!AudioCtx) return;
+
+    const ctx = new AudioCtx();
+    const oscillator = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    oscillator.type = 'sine';
+    oscillator.frequency.value = kind === 'success' ? 880 : 220;
+
+    gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.08, ctx.currentTime + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.12);
+
+    oscillator.connect(gain);
+    gain.connect(ctx.destination);
+    oscillator.start();
+    oscillator.stop(ctx.currentTime + 0.12);
+
+    oscillator.onended = () => {
+      ctx.close().catch(() => undefined);
+    };
+  } catch {
+    // no-op
+  }
+};
+
 // --- PLANNER LOGIC ---
 
 export const getDailyPlanStatus = (): boolean[] => {
-  const today = new Date().toISOString().split('T')[0];
-  const stored = localStorage.getItem(DAILY_PLAN_KEY);
-  
-  if (stored) {
-    const parsed = JSON.parse(stored);
-    if (parsed.date === today) {
-      return parsed.completed;
-    }
+  const today = getLocalDateKey(new Date());
+  const parsed = safeParse<{ date?: string; completed?: boolean[] }>(localStorage.getItem(DAILY_PLAN_KEY), {});
+
+  if (parsed.date === today && Array.isArray(parsed.completed)) {
+    return parsed.completed;
   }
   // New day or no data
   return [false, false]; // Default 2 tasks
 };
 
 export const toggleDailyPlanTask = (index: number) => {
-  const today = new Date().toISOString().split('T')[0];
+  const today = getLocalDateKey(new Date());
   const currentStatus = getDailyPlanStatus();
   const newStatus = [...currentStatus];
   newStatus[index] = !newStatus[index];
@@ -312,55 +568,76 @@ export const saveTaskResult = (
   };
   
   const newHistory = [...current.history, result];
-  
-  const wasAlreadyCompleted = specificTaskId 
-    ? current.history.some(h => h.taskId === specificTaskId) 
-    : false;
-
-  const newCompletedCount = wasAlreadyCompleted ? current.completedTasks : current.completedTasks + 1;
-  
-  const percentage = maxScore > 0 ? (score / maxScore) * 100 : 0;
-  const progressIncrement = percentage >= 80 ? 10 : percentage >= 50 ? 5 : 2;
-  
-  const currentModuleProgress = current.moduleProgress[module] || 0;
-  const newModuleProgress = Math.min(100, currentModuleProgress + progressIncrement);
-
-  const updatedProgress = {
-    ...current.moduleProgress,
-    [module]: newModuleProgress
-  };
-
-  const newLevel = calculateLevel(updatedProgress);
-  const xpGained = Math.ceil(score * 2.5); 
+  const activityPatch = touchDailyActivity(current, 1);
 
   // IMPORTANT: We do not call updateStats here directly to avoid double saving, 
   // but we construct the object for updateStats to handle achievements.
   
   updateStats({
     history: newHistory,
-    completedTasks: newCompletedCount,
-    moduleProgress: updatedProgress,
-    level: newLevel,
-    xp: current.xp + xpGained
+    ...activityPatch
   });
-  
-  // Update activity log
-  addXP(0); 
 };
 
 export const getFlashcards = (): Flashcard[] => {
-  const stored = localStorage.getItem(FLASHCARDS_KEY);
-  if (!stored) {
-    localStorage.setItem(FLASHCARDS_KEY, JSON.stringify(INITIAL_FLASHCARDS));
-    return INITIAL_FLASHCARDS;
+  return getFlashcardsStore().items;
+};
+
+const getFlashcardsStore = (): FlashcardsStore => {
+  const raw = localStorage.getItem(FLASHCARDS_KEY);
+  if (!raw) {
+    const seed: FlashcardsStore = { items: INITIAL_FLASHCARDS, updatedAt: Date.now() };
+    localStorage.setItem(FLASHCARDS_KEY, JSON.stringify(seed));
+    return seed;
   }
-  return JSON.parse(stored);
+
+  const parsedUnknown = safeParse<unknown>(raw, null);
+  if (Array.isArray(parsedUnknown)) {
+    const migrated: FlashcardsStore = {
+      items: parsedUnknown as Flashcard[],
+      updatedAt: Date.now()
+    };
+    localStorage.setItem(FLASHCARDS_KEY, JSON.stringify(migrated));
+    return migrated;
+  }
+
+  const parsed = parsedUnknown as Partial<FlashcardsStore> | null;
+  if (parsed && Array.isArray(parsed.items)) {
+    return {
+      items: parsed.items,
+      updatedAt: typeof parsed.updatedAt === 'number' ? parsed.updatedAt : Date.now()
+    };
+  }
+
+  const fallback: FlashcardsStore = { items: INITIAL_FLASHCARDS, updatedAt: Date.now() };
+  localStorage.setItem(FLASHCARDS_KEY, JSON.stringify(fallback));
+  return fallback;
+};
+
+const saveFlashcardsStore = (items: Flashcard[], updatedAt?: number) => {
+  const payload: FlashcardsStore = {
+    items,
+    updatedAt: updatedAt ?? Date.now()
+  };
+  localStorage.setItem(FLASHCARDS_KEY, JSON.stringify(payload));
+  window.dispatchEvent(new CustomEvent(FLASHCARDS_UPDATED_EVENT, { detail: payload }));
+  return payload;
+};
+
+export const getFlashcardsSyncPayload = (): FlashcardsStore => getFlashcardsStore();
+
+export const replaceLocalStats = (stats: UserStats) => {
+  saveStats(stats);
+};
+
+export const replaceLocalFlashcards = (payload: { items: Flashcard[]; updatedAt?: number }) => {
+  saveFlashcardsStore(payload.items, payload.updatedAt);
 };
 
 export const updateFlashcardStatus = (id: string, status: Flashcard['status']) => {
   const cards = getFlashcards();
   const updated = cards.map(c => c.id === id ? { ...c, status } : c);
-  localStorage.setItem(FLASHCARDS_KEY, JSON.stringify(updated));
+  saveFlashcardsStore(updated);
 
   const masteredCount = updated.filter(c => c.status === 'mastered').length;
   const totalCount = updated.length;
@@ -376,15 +653,12 @@ export const updateFlashcardStatus = (id: string, status: Flashcard['status']) =
 };
 
 export const getCategoryIndex = (category: string): number => {
-  const stored = localStorage.getItem(VOCAB_INDICES_KEY);
-  if (!stored) return 0;
-  const indices = JSON.parse(stored);
+  const indices = safeParse<Record<string, number>>(localStorage.getItem(VOCAB_INDICES_KEY), {});
   return indices[category] || 0;
 };
 
 export const saveCategoryIndex = (category: string, index: number) => {
-  const stored = localStorage.getItem(VOCAB_INDICES_KEY);
-  const indices = stored ? JSON.parse(stored) : {};
+  const indices = safeParse<Record<string, number>>(localStorage.getItem(VOCAB_INDICES_KEY), {});
   indices[category] = index;
   localStorage.setItem(VOCAB_INDICES_KEY, JSON.stringify(indices));
 };

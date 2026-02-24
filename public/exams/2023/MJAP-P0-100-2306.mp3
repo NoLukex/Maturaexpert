@@ -1,0 +1,747 @@
+<!-- test code gmt -->
+<!doctype html>
+<!--[if !IE]>
+<html class="no-js non-ie" lang="pl-PL"> <![endif]-->
+<!--[if IE 7 ]>
+<html class="no-js ie7" lang="pl-PL"> <![endif]-->
+<!--[if IE 8 ]>
+<html class="no-js ie8" lang="pl-PL"> <![endif]-->
+<!--[if IE 9 ]>
+<html class="no-js ie9" lang="pl-PL"> <![endif]-->
+<!--[if gt IE 9]><!-->
+<html class="no-js" lang="pl-PL"> <!--<![endif]-->
+<head>
+<!--172.18.0.3 - 20-->
+    <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="profile" href="http://gmpg.org/xfn/11">
+    <link rel="pingback" href="https://cke.gov.pl/xmlrpc.php">
+    <!--    <script src="scroller.js"></script>-->
+    <title>Strona nie została znaleziona &#8211; CKE</title>
+<meta name='robots' content='max-image-preview:large' />
+<link rel='dns-prefetch' href='//fonts.googleapis.com' />
+<link rel="alternate" type="application/rss+xml" title="CKE &raquo; Kanał z wpisami" href="https://cke.gov.pl/feed/" />
+<link rel="alternate" type="application/rss+xml" title="CKE &raquo; Kanał z komentarzami" href="https://cke.gov.pl/comments/feed/" />
+<style id='wp-img-auto-sizes-contain-inline-css' type='text/css'>
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+<style id='wp-emoji-styles-inline-css' type='text/css'>
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+/*# sourceURL=wp-emoji-styles-inline-css */
+</style>
+<style id='wp-block-library-inline-css' type='text/css'>
+:root{--wp-block-synced-color:#7a00df;--wp-block-synced-color--rgb:122,0,223;--wp-bound-block-color:var(--wp-block-synced-color);--wp-editor-canvas-background:#ddd;--wp-admin-theme-color:#007cba;--wp-admin-theme-color--rgb:0,124,186;--wp-admin-theme-color-darker-10:#006ba1;--wp-admin-theme-color-darker-10--rgb:0,107,160.5;--wp-admin-theme-color-darker-20:#005a87;--wp-admin-theme-color-darker-20--rgb:0,90,135;--wp-admin-border-width-focus:2px}@media (min-resolution:192dpi){:root{--wp-admin-border-width-focus:1.5px}}.wp-element-button{cursor:pointer}:root .has-very-light-gray-background-color{background-color:#eee}:root .has-very-dark-gray-background-color{background-color:#313131}:root .has-very-light-gray-color{color:#eee}:root .has-very-dark-gray-color{color:#313131}:root .has-vivid-green-cyan-to-vivid-cyan-blue-gradient-background{background:linear-gradient(135deg,#00d084,#0693e3)}:root .has-purple-crush-gradient-background{background:linear-gradient(135deg,#34e2e4,#4721fb 50%,#ab1dfe)}:root .has-hazy-dawn-gradient-background{background:linear-gradient(135deg,#faaca8,#dad0ec)}:root .has-subdued-olive-gradient-background{background:linear-gradient(135deg,#fafae1,#67a671)}:root .has-atomic-cream-gradient-background{background:linear-gradient(135deg,#fdd79a,#004a59)}:root .has-nightshade-gradient-background{background:linear-gradient(135deg,#330968,#31cdcf)}:root .has-midnight-gradient-background{background:linear-gradient(135deg,#020381,#2874fc)}:root{--wp--preset--font-size--normal:16px;--wp--preset--font-size--huge:42px}.has-regular-font-size{font-size:1em}.has-larger-font-size{font-size:2.625em}.has-normal-font-size{font-size:var(--wp--preset--font-size--normal)}.has-huge-font-size{font-size:var(--wp--preset--font-size--huge)}.has-text-align-center{text-align:center}.has-text-align-left{text-align:left}.has-text-align-right{text-align:right}.has-fit-text{white-space:nowrap!important}#end-resizable-editor-section{display:none}.aligncenter{clear:both}.items-justified-left{justify-content:flex-start}.items-justified-center{justify-content:center}.items-justified-right{justify-content:flex-end}.items-justified-space-between{justify-content:space-between}.screen-reader-text{border:0;clip-path:inset(50%);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px;word-wrap:normal!important}.screen-reader-text:focus{background-color:#ddd;clip-path:none;color:#444;display:block;font-size:1em;height:auto;left:5px;line-height:normal;padding:15px 23px 14px;text-decoration:none;top:5px;width:auto;z-index:100000}html :where(.has-border-color){border-style:solid}html :where([style*=border-top-color]){border-top-style:solid}html :where([style*=border-right-color]){border-right-style:solid}html :where([style*=border-bottom-color]){border-bottom-style:solid}html :where([style*=border-left-color]){border-left-style:solid}html :where([style*=border-width]){border-style:solid}html :where([style*=border-top-width]){border-top-style:solid}html :where([style*=border-right-width]){border-right-style:solid}html :where([style*=border-bottom-width]){border-bottom-style:solid}html :where([style*=border-left-width]){border-left-style:solid}html :where(img[class*=wp-image-]){height:auto;max-width:100%}:where(figure){margin:0 0 1em}html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:var(--wp-admin--admin-bar--height,0px)}@media screen and (max-width:600px){html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:0px}}
+
+/*# sourceURL=wp-block-library-inline-css */
+</style><style id='global-styles-inline-css' type='text/css'>
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+<style id='classic-theme-styles-inline-css' type='text/css'>
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+/*# sourceURL=/wp-includes/css/classic-themes.min.css */
+</style>
+<link rel='stylesheet' id='contact-form-7-css' href='https://cke.gov.pl/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=6.1.4' type='text/css' media='all' />
+<link rel='stylesheet' id='sparkling-bootstrap-css' href='https://cke.gov.pl/wp-content/themes/cke/inc/css/bootstrap.min.css?ver=6.9' type='text/css' media='all' />
+<link rel='stylesheet' id='sparkling-icons-css' href='https://cke.gov.pl/wp-content/themes/cke/inc/css/font-awesome.min.css?ver=6.9' type='text/css' media='all' />
+<link rel='stylesheet' id='sparkling-fonts-css' href='//fonts.googleapis.com/css?family=Open+Sans%3A400italic%2C400%2C600%2C700&#038;ver=6.9' type='text/css' media='all' />
+<link rel='stylesheet' id='sparkling-style-css' href='https://cke.gov.pl/wp-content/themes/cke/style.css?ver=6.9' type='text/css' media='all' />
+<link rel='stylesheet' id='wp-pagenavi-css' href='https://cke.gov.pl/wp-content/plugins/wp-pagenavi/pagenavi-css.css?ver=2.70' type='text/css' media='all' />
+<!--n2css--><!--n2js--><script type="text/javascript" src="https://cke.gov.pl/wp-includes/js/jquery/jquery.min.js?ver=3.7.1" id="jquery-core-js"></script>
+<script type="text/javascript" src="https://cke.gov.pl/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1" id="jquery-migrate-js"></script>
+<script type="text/javascript" src="https://cke.gov.pl/wp-content/themes/cke/inc/js/functions.min.js?ver=6.9" id="sparkling-functions-js"></script>
+<link rel="https://api.w.org/" href="https://cke.gov.pl/wp-json/" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://cke.gov.pl/xmlrpc.php?rsd" />
+<meta name="generator" content="WordPress 6.9" />
+        <script type="text/javascript">
+            (function () {
+                window.lsow_fs = {can_use_premium_code: false};
+            })();
+        </script>
+        <style type="text/css">.navbar.navbar-default, .navbar-default .navbar-nav .open .dropdown-menu > li > a {background-color: #ffffff;}@media (max-width: 767px) {.navbar-default .navbar-nav .open .dropdown-menu>.active>a, .navbar-default .navbar-nav .open .dropdown-menu>.active>a:focus, .navbar-default .navbar-nav .open .dropdown-menu>.active>a:hover {background: ; color:#dd9933;} }.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus, .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus, .dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus, .navbar-default .navbar-nav .open .dropdown-menu > li.active > a {background-color: ; color:#dd9933;}.navbar-default .navbar-nav .current-menu-ancestor a.dropdown-toggle { color: #dd9933;}</style><link rel="icon" href="https://cke.gov.pl/wp-content/uploads/logo-cke-strona-60x60.png" sizes="32x32" />
+<link rel="icon" href="https://cke.gov.pl/wp-content/uploads/logo-cke-strona.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="https://cke.gov.pl/wp-content/uploads/logo-cke-strona.png" />
+<meta name="msapplication-TileImage" content="https://cke.gov.pl/wp-content/uploads/logo-cke-strona.png" />
+		<style type="text/css" id="wp-custom-css">
+			.large-icon .small-size-boxes {
+    font-size: 13px;
+}
+
+#footer-area a {
+    font-size: 20px;
+}
+
+.site-main .blue2, .blue2 a {
+    background-color:#0079d6;
+}
+
+#bc.mod_114 {
+    background-color: #0079d6;
+}
+
+span.ico_sioz {
+    margin-bottom: 5px;
+    display: block;
+    padding-bottom: 6px;
+}
+
+div#n2-ss-2-align {
+	max-width: 100%;
+}
+
+.wp-block-table thead {
+	border-top: 1px solid;
+}
+
+form.wpcf7-form {
+	max-width: 500px;
+	margin: 0 auto;
+}
+
+form.wpcf7-form label {
+	width: 100%;
+	font-size: 14px;
+  line-height: 22px;
+}
+
+.wpcf7-form-control-wrap {
+	display: block;
+	margin-top: 0;
+}
+
+input[type="text"], input[type="email"], input[type="tel"], input[type="url"], input[type="password"], input[type="search"], textarea, select {
+	width: 100%;
+	padding: 6px 10px;
+	border: 1px solid #dcdcdc;
+	min-height: 38px;
+	border-radius: 0;
+}
+
+form.wpcf7-form textarea {
+	min-width: 100%;
+	max-width: 100%;
+}
+
+form.wpcf7-form .btn{
+	outline: none;
+	border: 0;
+	padding: 12px 50px;
+}		</style>
+		<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-39779396-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TXBXCD9LGD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-TXBXCD9LGD');
+</script>
+
+<!-- CKE -->
+</head>
+
+<body class="error404 wp-theme-cke group-blog">
+<div id="sr-only">
+<a class="sr-only sr-only-focusable" href="#content">Przejdź do treści</a>
+<a class="sr-only sr-only-focusable" href="#navbar">Przejdź do nawigacji</a>
+</div>
+<div id="page" class="hfeed site">
+
+<!--[if lt IE 9]>
+	<div class="oldBrowser">
+		<div class="oldBrowser1">
+			<h3>Twoja przeglądarka jest przestarzała.</h3>
+			<p>Przeglądarka, której używasz jest przestarzała, przez co niektóre funkcjonalności mogą być ograniczone. Używanie nieaktualnych wersji przeglądarek może narazić Cię na niebezpieczeństwo ataku i utraty danych. Sugerujemy aktualizację do najnowszej wersji:
+			<a href="https://www.mozilla.org/pl/firefox/new/"  title="Pobierz przeglądarkę Firefox">Firefox</a>, 
+			<a href="https://www.google.com/chrome"  title="Pobierz przeglądarkę Google Chrome">Google Chrome</a>, 
+			<a href="http://windows.microsoft.com/pl-PL/internet-explorer/products/ie/home"  title="Pobierz przeglądarkę Internet Explorer">Internet Explorer</a>, 
+			<a href="http://www.opera.com/"  title="Pobierz przeglądarkę Opera">Opera</a>.
+		</p>
+		</div>
+	</div>
+<![endif]-->
+
+    <div id="top">
+        <div class="container">
+	    <header id="logo">
+            <div class="row">
+                <div class="col-xs-12 col-sm-3 left logo_mobile" style="padding-right:0px;">
+                    <a class="logo" href="/">
+                        <img class="img-responsive"
+                             src="https://cke.gov.pl/wp-content/themes/cke/images/logo.png"
+                             alt="Logo oraz przejście na stronę główną Centralnej Komisji Egzaminacyjnej">
+                    </a>
+                </div>
+                <div class="col-xs-12 col-sm-9 hidden-xs right" style="padding-left:0px; 
+                                                                    display: flex;
+                                                                    align-items: center;
+                                                                    justify-content: space-between;
+                                                                    flex-wrap: wrap;">
+
+		    <!-- <div class"em23" style="margin-left:0px; float:left;">
+		        	<a href="/egzamin-maturalny/egzamin-maturalny-w-formule-2023/">
+		            		<img class="img-responsive" src="https://cke.gov.pl/wp-content/themes/cke/images/EM23_logo.png" alt="Matura 2023">
+		        	</a>
+		    </div>
+
+
+		    <div class"ukraina" style="margin-left:0px; float:left; padding-left:15px; padding-top:3px;">
+		        <a href="/materialy-w-jezyku-ukrainskim/">
+		        	<img class="img-responsive" src="https://cke.gov.pl/wp-content/themes/cke/images/flaga_ukrainy_2.png" alt="Materiały w języku ukraińskim">
+		        </a>
+		    </div> -->
+
+                    <div class="form_search">
+  <form method="get" action="https://cke.gov.pl/index.php" >
+    <fieldset>
+      <legend>Wyszukiwarka</legend>
+      <input type="hidden" name="search" value="all">
+      <input type="text" class="textfield clear_input form-control" name="s" value="" title="wpisz szukaną frazę"
+             placeholder="wpisz szukaną frazę">
+      <input type="submit" title="Szukaj frazy" name="search_top" class="submit" value="">
+    </fieldset>
+  </form>
+</div>
+
+		    <div class="wcag">
+                <a class="" style="display: inline-flex; align-items: center; padding-top: 5px;" href="/deklaracje/" title="Złóż deklarację online">
+                    <p style="
+                        margin: 0 0 2px 5px;
+                        line-height: 14px;
+                        font-size: 12px;
+                        font-weight: 700;
+                        text-align: left;
+						border: red solid 1px;
+						padding: 2px 5px;
+                    ">ZŁÓŻ</br>DEKLARACJĘ</br>ONLINE</p>
+                </a>
+		    </div>
+
+                    <div class="wcag center">
+                        <div class="font_size hide">
+                            <a class="font minus zeno_font_resizer_minus" href="javascript:fontsize('down');"
+                               title="Zmniejsz czcionkę">
+                                <span class="notext">Zmniejsz czcionkę</span>
+                                <img src="https://cke.gov.pl/wp-content/themes/cke/images/font-.png"></a>
+                            <span class="small">A</span>
+                            <span class="normal zeno_font_resizer_reset">A</span>
+                            <span class="big">A</span>
+                            <a class="font plus zeno_font_resizer_add" href="javascript:fontsize('up');"
+                               title="Powiększ czcionkę">
+                                <span class="notext">Powiększ czcionkę</span>
+                                <img src="https://cke.gov.pl/wp-content/themes/cke/images/font+.png">
+                            </a>
+
+                        <a href="#" onClick="Vividly.toggle()" title="Włącz wersję portalu dla niedowidzących"
+                           class="eye">
+                            <span class="notext">Wersja dla niedowidzących</span>
+                        </a>
+                        </div>
+                    </div>
+                    <div class="social_media right">
+                        <a href="http://www.bip.cke.edu.pl/"
+                           title="Przejście do Biuletynu Informacji Publicznej CKE. Link otwierany w nowym oknie"
+                           target="_blank" class="bip-top">
+                           <img src="https://cke.gov.pl/wp-content/themes/cke/images/ban/logo-bip.png" alt="Przejście do Biuletynu Informacji Publicznej CKE. Link otwierany w nowym oknie">
+                        </a>
+                        <a href="https://twitter.com/cke_pl" title="Link otwierany w nowym oknie" target="_blank" class="face"><img src="https://cke.gov.pl/wp-content/themes/cke/images/ban/twitter.png" alt="Przejście do portalu społecznościowego twitter"><span class="notext">Twitter</span></a>
+                        <a href="https://www.youtube.com/user/ckeedupl" title="Link otwierany w nowym oknie" target="_blank" class="yt"><img src="https://cke.gov.pl/wp-content/themes/cke/images/ban/banner-10.png" alt="Przejście do portalu społecznościowego youtube"><span class="notext">Youtube</span></a> 
+			            <a href="/en/" title="Link otwierany w nowym oknie" target="_blank" class="yt"><img src="https://cke.gov.pl/wp-content/themes/cke/images/ban/english_2.png" alt="Przejście do anglojęzycznej wersji serwisu"><span class="notext">Język angielski</span></a>
+						
+                       <!-- <img src="https://cke.gov.pl/wp-content/themes/cke/images/ban/ue-flag.svg" alt="Dofinasnsowane przez Unię Europejską"> -->
+						<a href="/efs" title="Link otwierany w nowym oknie" target="_blank" class="yt">
+							<img src="https://cke.gov.pl/wp-content/themes/cke/images/ban/logo_ue_1.png" alt="Dofinasnsowane przez Unię Europejską">
+							<span class="notext">Dofinasnsowane przez Unię Europejską</span></a>
+                    </div>
+                </div>
+
+            </div>
+	    </header><!-- #logo -->
+            <header id="masthead" class="site-header" role="banner">
+                <nav id ="navbar" class="navbar navbar-default "
+                     role="navigation">
+                        <div class="row">
+                            <div class="site-navigation-inner col-sm-12">
+                                <div class="navbar-header">
+                                    <button type="button" class="btn navbar-toggle" data-toggle="collapse"
+                                            data-target=".navbar-ex1-collapse">
+                                        <span class="sr-only">Toggle navigation</span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                    </button>
+
+                                    
+
+                                </div>
+                                <div class="collapse navbar-collapse navbar-ex1-collapse container-fullwidth"><ul id="menu-menu-1" class="nav navbar-nav mt"><li id="menu-item-13" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home menu-item-13"><a title="Strona startowa" href="https://cke.gov.pl/">Strona startowa</a></li>
+<li id="menu-item-22" class="icon-students menu-item menu-item-type-post_type menu-item-object-page menu-item-22"><a title="O komisji" href="https://cke.gov.pl/o-komisji/">O komisji</a></li>
+<li id="menu-item-56" class="icon-pageedit menu-item menu-item-type-taxonomy menu-item-object-category menu-item-56"><a title="Aktualności" href="https://cke.gov.pl/category/aktualnosci/">Aktualności</a></li>
+<li id="menu-item-643" class="icon-arkusze menu-item menu-item-type-post_type menu-item-object-page menu-item-643"><a title="Arkusze" href="https://cke.gov.pl/arkusze/">Arkusze</a></li>
+<li id="menu-item-67" class="icon-books menu-item menu-item-type-post_type menu-item-object-page menu-item-67"><a title="Akty prawne" href="https://cke.gov.pl/akty-prawne/">Akty prawne</a></li>
+<li id="menu-item-666" class="icon-results menu-item menu-item-type-post_type menu-item-object-page menu-item-666"><a title="Wyniki egzaminów i badania" href="https://cke.gov.pl/wyniki-egzaminow/">Wyniki egzaminów i badania</a></li>
+<li id="menu-item-9526" class="icon-archive menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-9526 dropdown"><a title="Egzaminy wygaszone" href="#" data-toggle="dropdown" class="dropdown-toggle">Egzaminy wygaszone <span class="caret"></span></a>
+<ul role="menu" class=" dropdown-menu">
+	<li id="menu-item-13911" class="icon-archive menu-item menu-item-type-post_type menu-item-object-page menu-item-13911"><a title="Egzamin potwierdzający kwalifikacje w zawodzie &lt;br&gt; Formuła 2012" href="https://cke.gov.pl/egzamin-zawodowy/egzamin-w-nowej-formule/">Egzamin potwierdzający kwalifikacje w zawodzie <br> Formuła 2012</a></li>
+	<li id="menu-item-6040" class="icon-archive menu-item menu-item-type-post_type menu-item-object-page menu-item-6040"><a title="Egzamin gimnazjalny" href="https://cke.gov.pl/egzamin-gimnazjalny/">Egzamin gimnazjalny</a></li>
+	<li id="menu-item-7016" class="icon-archive menu-item menu-item-type-post_type menu-item-object-page menu-item-7016"><a title="Egzamin maturalny w Formule 2014" href="https://cke.gov.pl/egzamin-maturalny/egzamin-w-starej-formule/">Egzamin maturalny w Formule 2014</a></li>
+	<li id="menu-item-6042" class="icon-archive menu-item menu-item-type-post_type menu-item-object-page menu-item-6042"><a title="Egzamin eksternistyczny - gimnazjum" href="https://cke.gov.pl/egzamin-eksternistyczny/gimnazjum/">Egzamin eksternistyczny &#8211; gimnazjum</a></li>
+	<li id="menu-item-4496" class="icon-archive menu-item menu-item-type-post_type menu-item-object-page menu-item-4496"><a title="Sprawdzian (archiwum)" href="https://cke.gov.pl/sprawdzian/">Sprawdzian (archiwum)</a></li>
+	<li id="menu-item-6530" class="icon-archive menu-item menu-item-type-post_type menu-item-object-page menu-item-6530"><a title="Egz. eksternistyczny - zasadniczna&lt;br/&gt; szkoła zawodowa" href="https://cke.gov.pl/egzamin-eksternistyczny/zasadnicza-szkola-zawodowa-przed-ogolnoksztalcace/">Egz. eksternistyczny &#8211; zasadniczna<br/> szkoła zawodowa</a></li>
+	<li id="menu-item-4526" class="icon-archive menu-item menu-item-type-post_type menu-item-object-page menu-item-4526"><a title="Egz. potw. kwalifikacje&lt;br /&gt;zawodowe (&quot;Stara&quot; formuła)" href="https://cke.gov.pl/egzamin-zawodowy/egzamin-w-starej-formule/">Egz. potw. kwalifikacje<br />zawodowe (&#8222;Stara&#8221; formuła)</a></li>
+	<li id="menu-item-10802" class="icon-archive menu-item menu-item-type-post_type menu-item-object-page menu-item-10802"><a title="Egzaminy eksternistyczne - 3-letnie LO" href="https://cke.gov.pl/arkusze/egzamin-eksternistyczny/egzaminy-eksternistyczne-z-zakresu-trzyletniego-liceum-ogolnoksztalcacego-dla-doroslych-przeprowadzane-do-sesji-zimowej-2023-r/">Egzaminy eksternistyczne &#8211; 3-letnie LO</a></li>
+	<li id="menu-item-11960" class="icon-archive menu-item menu-item-type-post_type menu-item-object-page menu-item-11960"><a title="Egz. eksternistyczne - Szkoła branżowa II st." href="https://cke.gov.pl/arkusze/egzamin-eksternistyczny/egzaminy-eksternistyczne-z-zakresu-branzowej-szkoly-ii-stopnia-przeprowadzane-od-sesji-jesiennej-2022-r-do-sesji-zimowej-2024-r/">Egz. eksternistyczne &#8211; Szkoła branżowa II st.</a></li>
+</ul>
+</li>
+</ul></div>                            </div>
+                        </div>
+                </nav><!-- .site-navigation -->
+            </header><!-- #masthead -->
+        </div>
+    </div>
+    <div id="content" class="site-content">
+
+        <!--		<div class="top-section">-->
+        <!--			-->        <!--			-->        <!--		</div>-->
+
+        <div class="container main-content-area">
+                        <div class="row side-pull-right">
+                <!--echo '</div><!-- co zamykamy? -->
+
+<div id="secondary" class="widget-area col-xs-12 col-sm-5 col-md-3 static" role="complementary">
+    <div class="well"><nav class="container-fullwidth"><ul id="menu-lewee" class="main-navigation"><li id="menu-item-4483" class="green menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-4483"><a href="https://cke.gov.pl/egzamin-osmoklasisty/"><span class="ico-title">Egzamin ósmoklasisty</span></a>
+<ul class="sub-menu">
+	<li id="menu-item-4488" class="green icon-pin menu-item menu-item-type-post_type menu-item-object-page menu-item-4488"><a href="https://cke.gov.pl/egzamin-osmoklasisty/o-egzaminie/"><span class="ico"></span><span class="ico-title">O egzaminie</span></a></li>
+	<li id="menu-item-4490" class="green icon-books menu-item menu-item-type-post_type menu-item-object-page menu-item-4490"><a href="https://cke.gov.pl/egzamin-osmoklasisty/podstawa-programowa/"><span class="ico"></span><span class="ico-title">Podstawa programowa</span></a></li>
+	<li id="menu-item-4489" class="green icon-informatory menu-item menu-item-type-post_type menu-item-object-page menu-item-4489"><a href="https://cke.gov.pl/egzamin-osmoklasisty/informatory/"><span class="ico"></span><span class="ico-title">Informatory</span></a></li>
+	<li id="menu-item-4491" class="green icon-arkusze menu-item menu-item-type-post_type menu-item-object-page menu-item-4491"><a href="https://cke.gov.pl/egzamin-osmoklasisty/arkusze/"><span class="ico"></span><span class="ico-title">Arkusze</span></a></li>
+	<li id="menu-item-4487" class="green icon-info menu-item menu-item-type-post_type menu-item-object-page menu-item-4487"><a href="https://cke.gov.pl/egzamin-osmoklasisty/harmonogram-komunikaty-i-informacje/"><span class="ico"></span><span class="ico-title">Harmonogram, komunikaty i informacje</span></a></li>
+	<li id="menu-item-4486" class="green icon-results menu-item menu-item-type-post_type menu-item-object-page menu-item-4486"><a href="https://cke.gov.pl/egzamin-osmoklasisty/wyniki/"><span class="ico"></span><span class="ico-title">Wyniki, sprawozdania</span></a></li>
+	<li id="menu-item-4485" class="green icon-other-documents menu-item menu-item-type-post_type menu-item-object-page menu-item-4485"><a href="https://cke.gov.pl/egzamin-osmoklasisty/materialy-dodatkowe/"><span class="ico"></span><span class="ico-title">Materiały dodatkowe Arkusze diagnostyczne</span></a></li>
+	<li id="menu-item-4484" class="green icon-archive menu-item menu-item-type-post_type menu-item-object-page menu-item-4484"><a href="https://cke.gov.pl/egzamin-osmoklasisty/archiwum/"><span class="ico"></span><span class="ico-title">Archiwum</span></a></li>
+</ul>
+</li>
+<li id="menu-item-79" class="purple menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-79"><a href="https://cke.gov.pl/egzamin-maturalny/"><span class="ico-title">Egzamin maturalny</span></a>
+<ul class="sub-menu">
+	<li id="menu-item-7040" class="purple icon-pageedit menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-7040"><a href="https://cke.gov.pl/egzamin-maturalny/egzamin-maturalny-w-formule-2023/"><span class="ico"></span><span class="ico-title">Egzamin maturalny w Formule 2023</span></a>
+	<ul class="sub-menu">
+		<li id="menu-item-7041" class="purple icon-pin menu-item menu-item-type-post_type menu-item-object-page menu-item-7041"><a href="https://cke.gov.pl/egzamin-maturalny/egzamin-maturalny-w-formule-2023/o-egzaminie/"><span class="ico"></span><span class="ico-title">O egzaminie</span></a></li>
+		<li id="menu-item-7048" class="purple icon-books menu-item menu-item-type-post_type menu-item-object-page menu-item-7048"><a href="https://cke.gov.pl/egzamin-maturalny/egzamin-maturalny-w-formule-2023/podstawa-programowa/"><span class="ico"></span><span class="ico-title">Podstawa programowa</span></a></li>
+		<li id="menu-item-7047" class="purple icon-informatory menu-item menu-item-type-post_type menu-item-object-page menu-item-7047"><a href="https://cke.gov.pl/egzamin-maturalny/egzamin-maturalny-w-formule-2023/informatory/"><span class="ico"></span><span class="ico-title">Informatory</span></a></li>
+		<li id="menu-item-7046" class="purple icon-arkusze menu-item menu-item-type-post_type menu-item-object-page menu-item-7046"><a href="https://cke.gov.pl/egzamin-maturalny/egzamin-maturalny-w-formule-2023/arkusze/"><span class="ico"></span><span class="ico-title">Arkusze</span></a></li>
+		<li id="menu-item-7045" class="purple icon-info menu-item menu-item-type-post_type menu-item-object-page menu-item-7045"><a href="https://cke.gov.pl/egzamin-maturalny/egzamin-maturalny-w-formule-2023/harmonogram-komunikaty-i-informacje/"><span class="ico"></span><span class="ico-title">Harmonogram, komunikaty i informacje</span></a></li>
+		<li id="menu-item-7044" class="purple icon-results menu-item menu-item-type-post_type menu-item-object-page menu-item-7044"><a href="https://cke.gov.pl/egzamin-maturalny/egzamin-maturalny-w-formule-2023/wyniki-sprawozdania/"><span class="ico"></span><span class="ico-title">Wyniki, sprawozdania</span></a></li>
+		<li id="menu-item-7043" class="purple icon-other-documents menu-item menu-item-type-post_type menu-item-object-page menu-item-7043"><a href="https://cke.gov.pl/egzamin-maturalny/egzamin-maturalny-w-formule-2023/materialy-dodatkowe/"><span class="ico"></span><span class="ico-title">Materiały dodatkowe Arkusze diagnostyczne</span></a></li>
+		<li id="menu-item-7042" class="purple icon-archive menu-item menu-item-type-post_type menu-item-object-page menu-item-7042"><a href="https://cke.gov.pl/egzamin-maturalny/egzamin-maturalny-w-formule-2023/archiwum/"><span class="ico"></span><span class="ico-title">Archiwum</span></a></li>
+	</ul>
+</li>
+	<li id="menu-item-118" class="yellow2 icon-pageedit menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-118"><a href="https://cke.gov.pl/egzamin-maturalny/egzamin-maturalny-w-formule-2015/"><span class="ico"></span><span class="ico-title">Egzamin maturalny w Formule 2015</span></a>
+	<ul class="sub-menu">
+		<li id="menu-item-148" class="yellow icon-pin menu-item menu-item-type-post_type menu-item-object-page menu-item-148"><a href="https://cke.gov.pl/egzamin-maturalny/egzamin-maturalny-w-formule-2015/o-egzaminie/"><span class="ico"></span><span class="ico-title">O egzaminie</span></a></li>
+		<li id="menu-item-147" class="yellow icon-books menu-item menu-item-type-post_type menu-item-object-page menu-item-147"><a href="https://cke.gov.pl/egzamin-maturalny/egzamin-maturalny-w-formule-2015/podstawa-programowa/"><span class="ico"></span><span class="ico-title">Podstawa programowa</span></a></li>
+		<li id="menu-item-146" class="yellow icon-informatory menu-item menu-item-type-post_type menu-item-object-page menu-item-146"><a href="https://cke.gov.pl/egzamin-maturalny/egzamin-maturalny-w-formule-2015/informatory/"><span class="ico"></span><span class="ico-title">Informatory</span></a></li>
+		<li id="menu-item-145" class="yellow icon-arkusze menu-item menu-item-type-post_type menu-item-object-page menu-item-145"><a href="https://cke.gov.pl/egzamin-maturalny/egzamin-maturalny-w-formule-2015/arkusze/"><span class="ico"></span><span class="ico-title">Arkusze</span></a></li>
+		<li id="menu-item-144" class="yellow icon-info menu-item menu-item-type-post_type menu-item-object-page menu-item-144"><a href="https://cke.gov.pl/egzamin-maturalny/egzamin-maturalny-w-formule-2015/komunikaty-i-informacje/"><span class="ico"></span><span class="ico-title">Harmonogram, komunikaty i informacje</span></a></li>
+		<li id="menu-item-143" class="yellow icon-results menu-item menu-item-type-post_type menu-item-object-page menu-item-143"><a href="https://cke.gov.pl/egzamin-maturalny/egzamin-maturalny-w-formule-2015/wyniki/"><span class="ico"></span><span class="ico-title">Wyniki, sprawozdania</span></a></li>
+		<li id="menu-item-142" class="yellow icon-other-documents menu-item menu-item-type-post_type menu-item-object-page menu-item-142"><a href="https://cke.gov.pl/egzamin-maturalny/egzamin-maturalny-w-formule-2015/materialy-dodatkowe/"><span class="ico"></span><span class="ico-title">Materiały dodatkowe<br>Arkusze diagnostyczne</span></a></li>
+		<li id="menu-item-141" class="yellow icon-archive menu-item menu-item-type-post_type menu-item-object-page menu-item-141"><a title="Archiwum" href="https://cke.gov.pl/egzamin-maturalny/egzamin-maturalny-w-formule-2015/archiwum/"><span class="ico"></span><span class="ico-title">Archiwum</span></a></li>
+	</ul>
+</li>
+</ul>
+</li>
+<li id="menu-item-89" class="bluee menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-89"><a href="https://cke.gov.pl/egzamin-zawodowy/"><span class="ico-title">Egzaminy zawodowe</span></a>
+<ul class="sub-menu">
+	<li id="menu-item-4564" class="bluedark icon-pageedit menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-4564"><a href="https://cke.gov.pl/egzamin-zawodowy/egzamin-zawodowy-formula-2017/"><span class="ico"></span><span class="ico-title">Egzamin potwierdzający kwalifikacje w zawodzie <br> Formuła 2017</span></a>
+	<ul class="sub-menu">
+		<li id="menu-item-4563" class="bluedark icon-pin menu-item menu-item-type-post_type menu-item-object-page menu-item-4563"><a href="https://cke.gov.pl/egzamin-zawodowy/egzamin-zawodowy-formula-2017/o-egzaminie/"><span class="ico"></span><span class="ico-title">O egzaminie</span></a></li>
+		<li id="menu-item-4562" class="bluedark icon-books menu-item menu-item-type-post_type menu-item-object-page menu-item-4562"><a href="https://cke.gov.pl/egzamin-zawodowy/egzamin-zawodowy-formula-2017/podstawa-programowa/"><span class="ico"></span><span class="ico-title">Podstawa programowa</span></a></li>
+		<li id="menu-item-4561" class="bluedark icon-informatory menu-item menu-item-type-post_type menu-item-object-page menu-item-4561"><a href="https://cke.gov.pl/egzamin-zawodowy/egzamin-zawodowy-formula-2017/informatory/"><span class="ico"></span><span class="ico-title">Informatory – Wyposażenie ośrodków</span></a></li>
+		<li id="menu-item-4560" class="bluedark icon-arkusze menu-item menu-item-type-post_type menu-item-object-page menu-item-4560"><a href="https://cke.gov.pl/egzamin-zawodowy/egzamin-zawodowy-formula-2017/arkusze/"><span class="ico"></span><span class="ico-title">Arkusze</span></a></li>
+		<li id="menu-item-4559" class="bluedark icon-info menu-item menu-item-type-post_type menu-item-object-page menu-item-4559"><a href="https://cke.gov.pl/egzamin-zawodowy/egzamin-zawodowy-formula-2017/harmonogram-komunikaty-i-informacje/"><span class="ico"></span><span class="ico-title">Harmonogram, komunikaty i informacje</span></a></li>
+		<li id="menu-item-4558" class="bluedark icon-results menu-item menu-item-type-post_type menu-item-object-page menu-item-4558"><a href="https://cke.gov.pl/egzamin-zawodowy/egzamin-zawodowy-formula-2017/wyniki/"><span class="ico"></span><span class="ico-title">Wyniki, sprawozdania</span></a></li>
+		<li id="menu-item-4557" class="bluedark icon-other-documents menu-item menu-item-type-post_type menu-item-object-page menu-item-4557"><a href="https://cke.gov.pl/egzamin-zawodowy/egzamin-zawodowy-formula-2017/materialy-dodatkowe/"><span class="ico"></span><span class="ico-title">Klucze odpowiedzi</span></a></li>
+		<li id="menu-item-4556" class="bluedark icon-archive menu-item menu-item-type-post_type menu-item-object-page menu-item-4556"><a href="https://cke.gov.pl/egzamin-zawodowy/egzamin-zawodowy-formula-2017/archiwum/"><span class="ico"></span><span class="ico-title">Archiwum</span></a></li>
+	</ul>
+</li>
+	<li id="menu-item-6168" class="bluee icon-pageedit menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-6168"><a href="https://cke.gov.pl/egzamin-zawodowy/egzamin-zawodowy-formula-2019/"><span class="ico"></span><span class="ico-title">Egzamin zawodowy<br> Formuła 2019</span></a>
+	<ul class="sub-menu">
+		<li id="menu-item-6174" class="bluee icon-pin menu-item menu-item-type-post_type menu-item-object-page menu-item-6174"><a href="https://cke.gov.pl/egzamin-zawodowy/egzamin-zawodowy-formula-2019/o-egzaminie/"><span class="ico"></span><span class="ico-title">O egzaminie</span></a></li>
+		<li id="menu-item-6175" class="bluee icon-books menu-item menu-item-type-post_type menu-item-object-page menu-item-6175"><a href="https://cke.gov.pl/egzamin-zawodowy/egzamin-zawodowy-formula-2019/podstawa-programowa/"><span class="ico"></span><span class="ico-title">Podstawa programowa</span></a></li>
+		<li id="menu-item-6176" class="bluee icon-informatory menu-item menu-item-type-post_type menu-item-object-page menu-item-6176"><a href="https://cke.gov.pl/egzamin-zawodowy/egzamin-zawodowy-formula-2019/informatory-wyposazenie-osrodkow/"><span class="ico"></span><span class="ico-title">Informatory – Wyposażenie ośrodków</span></a></li>
+		<li id="menu-item-6169" class="bluee icon-arkusze menu-item menu-item-type-post_type menu-item-object-page menu-item-6169"><a href="https://cke.gov.pl/egzamin-zawodowy/egzamin-zawodowy-formula-2019/jawne-zadania-egzaminacyjne-czesc-praktyczna/"><span class="ico"></span><span class="ico-title"><span class='small-size-boxes'>Jawne zadania egzaminacyjne (część praktyczna)</span></span></a></li>
+		<li id="menu-item-6173" class="bluee icon-info menu-item menu-item-type-post_type menu-item-object-page menu-item-6173"><a href="https://cke.gov.pl/egzamin-zawodowy/egzamin-zawodowy-formula-2019/harmonogramy-komunikaty-i-informacje/"><span class="ico"></span><span class="ico-title">Harmonogramy, komunikaty i informacje</span></a></li>
+		<li id="menu-item-6170" class="bluee icon-results menu-item menu-item-type-post_type menu-item-object-page menu-item-6170"><a href="https://cke.gov.pl/egzamin-zawodowy/egzamin-zawodowy-formula-2019/wyniki-sprawozdania/"><span class="ico"></span><span class="ico-title">Wyniki, sprawozdania</span></a></li>
+		<li id="menu-item-6172" class="bluee icon-other-documents menu-item menu-item-type-post_type menu-item-object-page menu-item-6172"><a href="https://cke.gov.pl/egzamin-zawodowy/egzamin-zawodowy-formula-2019/przykladowe-zadania/"><span class="ico"></span><span class="ico-title">Przykładowe zadania</span></a></li>
+		<li id="menu-item-6171" class="bluee icon-archive menu-item menu-item-type-post_type menu-item-object-page menu-item-6171"><a href="https://cke.gov.pl/egzamin-zawodowy/egzamin-zawodowy-formula-2019/archiwum/"><span class="ico"></span><span class="ico-title">Archiwum</span></a></li>
+	</ul>
+</li>
+	<li id="menu-item-6180" class="gray icon-pageedit menu-item menu-item-type-post_type menu-item-object-page menu-item-6180"><a href="https://cke.gov.pl/egzamin-zawodowy/system-informatyczny-obslugi-egzaminow-zawodowych-sioepkz/"><span class="ico"></span><span class="ico-title">System Informatyczny Obsługujący Egzaminy Zawodowe (dawniej SIOEPKZ)</span></a></li>
+</ul>
+</li>
+<li id="menu-item-101" class="brown menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-101"><a href="https://cke.gov.pl/egzamin-eksternistyczny/"><span class="ico-title">Egzamin eksternistyczny</span></a>
+<ul class="sub-menu">
+	<li id="menu-item-362" class="brown icon-pin menu-item menu-item-type-post_type menu-item-object-page menu-item-362"><a href="https://cke.gov.pl/egzamin-eksternistyczny/szkola-podstawowa/"><span class="ico"></span><span class="ico-title">Szkoła podstawowa</span></a></li>
+	<li id="menu-item-363" class="brown icon-pin menu-item menu-item-type-post_type menu-item-object-page menu-item-363"><a href="https://cke.gov.pl/egzamin-eksternistyczny/liceum-ogolnoksztalcace/"><span class="ico"></span><span class="ico-title">Liceum ogólnokształcące</span></a></li>
+	<li id="menu-item-6147" class="brown icon-pin menu-item menu-item-type-post_type menu-item-object-page menu-item-6147"><a href="https://cke.gov.pl/egzamin-eksternistyczny/branzowa-szkola-i-stopnia/"><span class="ico"></span><span class="ico-title">Branżowa szkoła I stopnia</span></a></li>
+	<li id="menu-item-6527" class="brown icon-pin menu-item menu-item-type-post_type menu-item-object-page menu-item-6527"><a href="https://cke.gov.pl/egzamin-eksternistyczny/branzowa-szkola-ii-stopnia/"><span class="ico"></span><span class="ico-title">Branżowa szkoła II stopnia</span></a></li>
+</ul>
+</li>
+<li id="menu-item-8154" class="mod_oke menu-item menu-item-type-post_type menu-item-object-page menu-item-8154"><a href="https://cke.gov.pl/komisje-egzaminacyjne/"><span class="ico-title">Okręgowe komisje egzaminacyjne</span></a></li>
+</ul></nav>
+</div>
+</div><!-- #secondary -->
+                <div class="main-content-inner col-xs-12 col-sm-7 col-md-9">
+	<div id="primary" class="content-area">
+		<main id="main" class="site-main" role="main">
+			<div class="post-inner-content">
+
+				<section class="error-404 not-found">
+					<header class="page-header">
+						<h1 class="page-title">Ups! Strona nie może być znaleziona.</h1>
+					</header><!-- .page-header -->
+
+					<div class="page-content">
+						<p>Nic nie znaleziono w tej lokalizacji. Spróbuj jednego z poniższych linków albo użyj wyszukiwarki.</p>
+
+						<div class="form_search">
+  <form method="get" action="https://cke.gov.pl/index.php" >
+    <fieldset>
+      <legend>Wyszukiwarka</legend>
+      <input type="hidden" name="search" value="all">
+      <input type="text" class="textfield clear_input form-control" name="s" value="" title="wpisz szukaną frazę"
+             placeholder="wpisz szukaną frazę">
+      <input type="submit" title="Szukaj frazy" name="search_top" class="submit" value="">
+    </fieldset>
+  </form>
+</div>
+
+						<div class="row">
+							<div class="col-md-6 not-found-widget">
+								
+		<div class="widget widget_recent_entries">
+		<h2 class="widgettitle">Recent Posts</h2>
+		<ul>
+											<li>
+					<a href="https://cke.gov.pl/images/_KOMUNIKATY/2026/egzaminy%20zawodowe%208.01.2026.pdf">Egzaminy zawodowe – informacja Centralnej Komisji Egzaminacyjnej z 8 stycznia 2026 r.</a>
+									</li>
+											<li>
+					<a href="https://cke.gov.pl/images/_KOMUNIKATY/2025/20251029%20Pr%C3%B3ba%202026%20p.pdf#new_tab">Informacja dyrektora Centralnej Komisji Egzaminacyjnej z 27 października 2025 r. dotycząca próbnego egzaminu ósmoklasisty oraz próbnego egzaminu  maturalnego w Formule 2023</a>
+									</li>
+											<li>
+					<a href="https://cke.gov.pl/images/_KOMUNIKATY/20250916%20choroby%20przewlek%C5%82e%202026.pdf">Informacja Centralnej Komisji Egzaminacyjnej z 16 września 2025 r. dotycząca szczegółowych sposobów dostosowania warunków i form przeprowadzania egzaminu ósmoklasisty oraz egzaminu maturalnego w roku szkolnym 2025/2026</a>
+									</li>
+											<li>
+					<a href="https://cke.gov.pl/nowy-wicedyrektor-cke-ds-cyfryzacji-i-jakosci-sprawdzania-egzaminow/">Nowy wicedyrektor CKE ds. cyfryzacji i jakości sprawdzania egzaminów</a>
+									</li>
+											<li>
+					<a href="https://cke.gov.pl/egzaminy-zawodowe-udostepnienie-wynikow-dostep-do-portalu-zdajacego/">Egzaminy zawodowe – udostępnienie wyników, dostęp do portalu zdającego</a>
+									</li>
+					</ul>
+
+		</div>							</div>
+
+							<div class="col-md-6 not-found-widget">
+																<div class="widget widget_categories">
+									<h2 class="widgettitle">Najczęściej używane kategorie.</h2>
+									<ul>
+										<li class="cat-item cat-item-6"><a href="https://cke.gov.pl/category/aktualnosci/">Aktualności</a> (241)
+</li>
+	<li class="cat-item cat-item-17"><a href="https://cke.gov.pl/category/slider/">Slider</a> (220)
+</li>
+									</ul>
+								</div><!-- .widget -->
+															</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6 not-found-widget">
+								<div class="widget widget_archive"><h2 class="widgettitle">Archiwa</h2><p>Spróbuj wyszukać w miesięcznych archiwach. 🙂</p>		<label class="screen-reader-text" for="archives-dropdown--1">Archiwa</label>
+		<select id="archives-dropdown--1" name="archive-dropdown">
+			
+			<option value="">Wybierz miesiąc</option>
+				<option value='https://cke.gov.pl/2026/01/'> styczeń 2026 </option>
+	<option value='https://cke.gov.pl/2025/10/'> październik 2025 </option>
+	<option value='https://cke.gov.pl/2025/09/'> wrzesień 2025 </option>
+	<option value='https://cke.gov.pl/2025/08/'> sierpień 2025 </option>
+	<option value='https://cke.gov.pl/2025/07/'> lipiec 2025 </option>
+	<option value='https://cke.gov.pl/2025/06/'> czerwiec 2025 </option>
+	<option value='https://cke.gov.pl/2025/05/'> maj 2025 </option>
+	<option value='https://cke.gov.pl/2025/04/'> kwiecień 2025 </option>
+	<option value='https://cke.gov.pl/2025/03/'> marzec 2025 </option>
+	<option value='https://cke.gov.pl/2025/01/'> styczeń 2025 </option>
+	<option value='https://cke.gov.pl/2024/10/'> październik 2024 </option>
+	<option value='https://cke.gov.pl/2024/08/'> sierpień 2024 </option>
+	<option value='https://cke.gov.pl/2024/07/'> lipiec 2024 </option>
+	<option value='https://cke.gov.pl/2024/06/'> czerwiec 2024 </option>
+	<option value='https://cke.gov.pl/2024/05/'> maj 2024 </option>
+	<option value='https://cke.gov.pl/2024/04/'> kwiecień 2024 </option>
+	<option value='https://cke.gov.pl/2024/03/'> marzec 2024 </option>
+	<option value='https://cke.gov.pl/2024/01/'> styczeń 2024 </option>
+	<option value='https://cke.gov.pl/2023/11/'> listopad 2023 </option>
+	<option value='https://cke.gov.pl/2023/10/'> październik 2023 </option>
+	<option value='https://cke.gov.pl/2023/09/'> wrzesień 2023 </option>
+	<option value='https://cke.gov.pl/2023/08/'> sierpień 2023 </option>
+	<option value='https://cke.gov.pl/2023/07/'> lipiec 2023 </option>
+	<option value='https://cke.gov.pl/2023/06/'> czerwiec 2023 </option>
+	<option value='https://cke.gov.pl/2023/05/'> maj 2023 </option>
+	<option value='https://cke.gov.pl/2023/04/'> kwiecień 2023 </option>
+	<option value='https://cke.gov.pl/2023/03/'> marzec 2023 </option>
+	<option value='https://cke.gov.pl/2023/01/'> styczeń 2023 </option>
+	<option value='https://cke.gov.pl/2022/11/'> listopad 2022 </option>
+	<option value='https://cke.gov.pl/2022/10/'> październik 2022 </option>
+	<option value='https://cke.gov.pl/2022/09/'> wrzesień 2022 </option>
+	<option value='https://cke.gov.pl/2022/07/'> lipiec 2022 </option>
+	<option value='https://cke.gov.pl/2022/05/'> maj 2022 </option>
+	<option value='https://cke.gov.pl/2022/04/'> kwiecień 2022 </option>
+	<option value='https://cke.gov.pl/2022/03/'> marzec 2022 </option>
+	<option value='https://cke.gov.pl/2022/02/'> luty 2022 </option>
+	<option value='https://cke.gov.pl/2022/01/'> styczeń 2022 </option>
+	<option value='https://cke.gov.pl/2021/12/'> grudzień 2021 </option>
+	<option value='https://cke.gov.pl/2021/11/'> listopad 2021 </option>
+	<option value='https://cke.gov.pl/2021/10/'> październik 2021 </option>
+	<option value='https://cke.gov.pl/2021/09/'> wrzesień 2021 </option>
+	<option value='https://cke.gov.pl/2021/08/'> sierpień 2021 </option>
+	<option value='https://cke.gov.pl/2021/07/'> lipiec 2021 </option>
+	<option value='https://cke.gov.pl/2021/06/'> czerwiec 2021 </option>
+	<option value='https://cke.gov.pl/2021/04/'> kwiecień 2021 </option>
+	<option value='https://cke.gov.pl/2021/03/'> marzec 2021 </option>
+	<option value='https://cke.gov.pl/2021/02/'> luty 2021 </option>
+	<option value='https://cke.gov.pl/2021/01/'> styczeń 2021 </option>
+	<option value='https://cke.gov.pl/2020/12/'> grudzień 2020 </option>
+	<option value='https://cke.gov.pl/2020/11/'> listopad 2020 </option>
+	<option value='https://cke.gov.pl/2020/10/'> październik 2020 </option>
+	<option value='https://cke.gov.pl/2020/09/'> wrzesień 2020 </option>
+	<option value='https://cke.gov.pl/2020/08/'> sierpień 2020 </option>
+	<option value='https://cke.gov.pl/2020/07/'> lipiec 2020 </option>
+	<option value='https://cke.gov.pl/2020/06/'> czerwiec 2020 </option>
+	<option value='https://cke.gov.pl/2020/05/'> maj 2020 </option>
+	<option value='https://cke.gov.pl/2020/04/'> kwiecień 2020 </option>
+	<option value='https://cke.gov.pl/2020/03/'> marzec 2020 </option>
+	<option value='https://cke.gov.pl/2020/02/'> luty 2020 </option>
+	<option value='https://cke.gov.pl/2020/01/'> styczeń 2020 </option>
+	<option value='https://cke.gov.pl/2019/09/'> wrzesień 2019 </option>
+	<option value='https://cke.gov.pl/2019/07/'> lipiec 2019 </option>
+	<option value='https://cke.gov.pl/2019/06/'> czerwiec 2019 </option>
+	<option value='https://cke.gov.pl/2019/05/'> maj 2019 </option>
+	<option value='https://cke.gov.pl/2019/04/'> kwiecień 2019 </option>
+	<option value='https://cke.gov.pl/2019/03/'> marzec 2019 </option>
+	<option value='https://cke.gov.pl/2019/02/'> luty 2019 </option>
+	<option value='https://cke.gov.pl/2019/01/'> styczeń 2019 </option>
+	<option value='https://cke.gov.pl/2018/12/'> grudzień 2018 </option>
+	<option value='https://cke.gov.pl/2018/10/'> październik 2018 </option>
+	<option value='https://cke.gov.pl/2018/09/'> wrzesień 2018 </option>
+	<option value='https://cke.gov.pl/2018/08/'> sierpień 2018 </option>
+	<option value='https://cke.gov.pl/2018/07/'> lipiec 2018 </option>
+	<option value='https://cke.gov.pl/2018/06/'> czerwiec 2018 </option>
+	<option value='https://cke.gov.pl/2018/04/'> kwiecień 2018 </option>
+	<option value='https://cke.gov.pl/2018/01/'> styczeń 2018 </option>
+	<option value='https://cke.gov.pl/2017/12/'> grudzień 2017 </option>
+	<option value='https://cke.gov.pl/2017/11/'> listopad 2017 </option>
+	<option value='https://cke.gov.pl/2017/10/'> październik 2017 </option>
+	<option value='https://cke.gov.pl/2017/09/'> wrzesień 2017 </option>
+	<option value='https://cke.gov.pl/2017/08/'> sierpień 2017 </option>
+	<option value='https://cke.gov.pl/2017/06/'> czerwiec 2017 </option>
+	<option value='https://cke.gov.pl/2017/05/'> maj 2017 </option>
+	<option value='https://cke.gov.pl/2017/04/'> kwiecień 2017 </option>
+	<option value='https://cke.gov.pl/2017/03/'> marzec 2017 </option>
+	<option value='https://cke.gov.pl/2017/02/'> luty 2017 </option>
+	<option value='https://cke.gov.pl/2017/01/'> styczeń 2017 </option>
+	<option value='https://cke.gov.pl/2016/12/'> grudzień 2016 </option>
+	<option value='https://cke.gov.pl/2016/11/'> listopad 2016 </option>
+	<option value='https://cke.gov.pl/2016/10/'> październik 2016 </option>
+	<option value='https://cke.gov.pl/2016/09/'> wrzesień 2016 </option>
+	<option value='https://cke.gov.pl/2016/08/'> sierpień 2016 </option>
+	<option value='https://cke.gov.pl/2016/07/'> lipiec 2016 </option>
+	<option value='https://cke.gov.pl/2016/06/'> czerwiec 2016 </option>
+	<option value='https://cke.gov.pl/2016/05/'> maj 2016 </option>
+	<option value='https://cke.gov.pl/2016/03/'> marzec 2016 </option>
+
+		</select>
+
+			<script type="text/javascript">
+/* <![CDATA[ */
+
+( ( dropdownId ) => {
+	const dropdown = document.getElementById( dropdownId );
+	function onSelectChange() {
+		setTimeout( () => {
+			if ( 'escape' === dropdown.dataset.lastkey ) {
+				return;
+			}
+			if ( dropdown.value ) {
+				document.location.href = dropdown.value;
+			}
+		}, 250 );
+	}
+	function onKeyUp( event ) {
+		if ( 'Escape' === event.key ) {
+			dropdown.dataset.lastkey = 'escape';
+		} else {
+			delete dropdown.dataset.lastkey;
+		}
+	}
+	function onClick() {
+		delete dropdown.dataset.lastkey;
+	}
+	dropdown.addEventListener( 'keyup', onKeyUp );
+	dropdown.addEventListener( 'click', onClick );
+	dropdown.addEventListener( 'change', onSelectChange );
+})( "archives-dropdown--1" );
+
+//# sourceURL=WP_Widget_Archives%3A%3Awidget
+/* ]]> */
+</script>
+</div>							</div>
+
+							<div class="col-md-6 not-found-widget">
+															</div>
+						</div>
+
+
+				</section><!-- .error-404 -->
+			</div>
+		</main><!-- #main -->
+</div>
+
+</div><!-- close .row -->
+</div><!-- close .container -->
+</div><!-- close .site-content -->
+
+<div id="footer-area">
+    <div class="ptopbottom">
+      <div class="container">
+        <div class="row">
+            <div id="" class="col-xs-1 col-lg-2">
+            </div>
+            <div id="uelogo" class="col-xs-12 col-lg-8">
+                <div id="ue">
+                <a href="https://cke.gov.pl/efs">
+                    <div class="foto center"><img class="img-responsive" alt="Przejście do artykułu pt. Projekt w trakcie realizacji pt. Ocenianie na ekranie współfinansowany z Programu Operacyjnego Polska Cyfrowa" src="https://cke.gov.pl/wp-content/themes/cke/media/logo_FE_RP_UE_KPO.png"></div>
+                </a>
+                </div>
+            </div>
+            <div id="" class="col-xs-1 col-lg-2">
+            </div>
+        </div>
+      </div>
+    </div>
+    <div id="foot_desc">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12 info">
+                    <img src="https://cke.gov.pl/wp-content/themes/cke/images/marker.png" alt="adres" width="26" height="36">
+                    <a href="https://www.google.com/maps?q=Marka+Edelmana+6&oe=utf-8&client=firefox-b-ab&um=1&ie=UTF-8&sa=X&ved=0ahUKEwjXvf286oLdAhWEJJoKHdmZDmwQ_AUICigB" target="_blank" 
+			title="Przejście do zewnętrznej strony z mapą">ul. Józefa Lewartowskiego 6, 00-190 Warszawa</a>
+                    </br><a style="padding-left:32px; font-size: small;" href="https://cke.gov.pl/o-komisji/dostepnosc-cyfrowa" alt="Przejście do deklaracji dostępności">Deklaracja dostępności</a>
+
+                </div>
+                <div class="col-sm-3 col-xs-12 info2">
+                    <img src="https://cke.gov.pl/wp-content/themes/cke/images/phone.png" alt="telefon" width="20" height="36"> 
+                    <a href="tel:22 53 66 500">
+                        +48 22 53 66 500
+                    </a>
+                </div>
+                <div class="col-sm-3 col-xs-12 info3">
+                    <img src="https://cke.gov.pl/wp-content/themes/cke/images/mail.png" alt="adres poczty elektronicznej"  width="38" height="26">
+                    <a href="mailto:sekretariat@cke.gov.pl">
+                        sekretariat@cke.gov.pl
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div><!-- #page -->
+
+        <script type="text/javascript">
+            jQuery(document).ready(function ($) {
+                if ($(window).width() >= 767) {
+                    $('.navbar-nav > li.menu-item > a').click(function () {
+                        window.location = $(this).attr('href');
+                    });
+                }
+            });
+        </script>
+    <script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/cke/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script type="text/javascript" src="https://cke.gov.pl/wp-includes/js/dist/hooks.min.js?ver=dd5603f07f9220ed27f1" id="wp-hooks-js"></script>
+<script type="text/javascript" src="https://cke.gov.pl/wp-includes/js/dist/i18n.min.js?ver=c26c3dc7bed366793375" id="wp-i18n-js"></script>
+<script type="text/javascript" id="wp-i18n-js-after">
+/* <![CDATA[ */
+wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
+//# sourceURL=wp-i18n-js-after
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://cke.gov.pl/wp-content/plugins/contact-form-7/includes/swv/js/index.js?ver=6.1.4" id="swv-js"></script>
+<script type="text/javascript" id="contact-form-7-js-translations">
+/* <![CDATA[ */
+( function( domain, translations ) {
+	var localeData = translations.locale_data[ domain ] || translations.locale_data.messages;
+	localeData[""].domain = domain;
+	wp.i18n.setLocaleData( localeData, domain );
+} )( "contact-form-7", {"translation-revision-date":"2025-06-27 10:51:46+0000","generator":"GlotPress\/4.0.1","domain":"messages","locale_data":{"messages":{"":{"domain":"messages","plural-forms":"nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);","lang":"pl"},"This contact form is placed in the wrong place.":["Ten formularz kontaktowy zosta\u0142 umieszczony w niew\u0142a\u015bciwym miejscu."],"Error:":["B\u0142\u0105d:"]}},"comment":{"reference":"includes\/js\/index.js"}} );
+//# sourceURL=contact-form-7-js-translations
+/* ]]> */
+</script>
+<script type="text/javascript" id="contact-form-7-js-before">
+/* <![CDATA[ */
+var wpcf7 = {
+    "api": {
+        "root": "https:\/\/cke.gov.pl\/wp-json\/",
+        "namespace": "contact-form-7\/v1"
+    },
+    "cached": 1
+};
+//# sourceURL=contact-form-7-js-before
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://cke.gov.pl/wp-content/plugins/contact-form-7/includes/js/index.js?ver=6.1.4" id="contact-form-7-js"></script>
+<script type="text/javascript" id="lsow-frontend-scripts-js-extra">
+/* <![CDATA[ */
+var lsow_settings = {"mobile_width":"780","custom_css":""};
+//# sourceURL=lsow-frontend-scripts-js-extra
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://cke.gov.pl/wp-content/plugins/livemesh-siteorigin-widgets/assets/js/lsow-frontend.min.js?ver=3.9.2" id="lsow-frontend-scripts-js"></script>
+<script type="text/javascript" src="https://cke.gov.pl/wp-content/themes/cke/inc/js/modernizr.min.js?ver=1" id="sparkling-modernizr-js"></script>
+<script type="text/javascript" src="https://cke.gov.pl/wp-content/themes/cke/inc/js/bootstrap.min.js?ver=1" id="sparkling-bootstrapjs-js"></script>
+<script type="text/javascript" src="https://cke.gov.pl/wp-content/themes/cke/inc/js/jssor.slider.mini.js?ver=1" id="sparkling-jssor-js"></script>
+<script type="text/javascript" src="https://cke.gov.pl/wp-content/themes/cke/inc/js/skip-link-focus-fix.js?ver=20140222" id="sparkling-skip-link-focus-fix-js"></script>
+<script type="text/javascript" src="https://cke.gov.pl/wp-content/plugins/page-links-to/dist/new-tab.js?ver=3.3.7" id="page-links-to-js"></script>
+<script id="wp-emoji-settings" type="application/json">
+{"baseUrl":"https://s.w.org/images/core/emoji/17.0.2/72x72/","ext":".png","svgUrl":"https://s.w.org/images/core/emoji/17.0.2/svg/","svgExt":".svg","source":{"concatemoji":"https://cke.gov.pl/wp-includes/js/wp-emoji-release.min.js?ver=6.9"}}
+</script>
+<script type="module">
+/* <![CDATA[ */
+/*! This file is auto-generated */
+const a=JSON.parse(document.getElementById("wp-emoji-settings").textContent),o=(window._wpemojiSettings=a,"wpEmojiSettingsSupports"),s=["flag","emoji"];function i(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function c(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0);const a=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);return t.every((e,t)=>e===a[t])}function p(e,t){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var n=e.getImageData(16,16,1,1);for(let e=0;e<n.data.length;e++)if(0!==n.data[e])return!1;return!0}function u(e,t,n,a){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\udde8\ud83c\uddf6","\ud83c\udde8\u200b\ud83c\uddf6")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!a(e,"\ud83e\u1fac8")}return!1}function f(e,t,n,a){let r;const o=(r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):document.createElement("canvas")).getContext("2d",{willReadFrequently:!0}),s=(o.textBaseline="top",o.font="600 32px Arial",{});return e.forEach(e=>{s[e]=t(o,e,n,a)}),s}function r(e){var t=document.createElement("script");t.src=e,t.defer=!0,document.head.appendChild(t)}a.supports={everything:!0,everythingExceptFlag:!0},new Promise(t=>{let n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(s),u.toString(),c.toString(),p.toString()].join(",")+"));",a=new Blob([e],{type:"text/javascript"});const r=new Worker(URL.createObjectURL(a),{name:"wpTestEmojiSupports"});return void(r.onmessage=e=>{i(n=e.data),r.terminate(),t(n)})}catch(e){}i(n=f(s,u,c,p))}t(n)}).then(e=>{for(const n in e)a.supports[n]=e[n],a.supports.everything=a.supports.everything&&a.supports[n],"flag"!==n&&(a.supports.everythingExceptFlag=a.supports.everythingExceptFlag&&a.supports[n]);var t;a.supports.everythingExceptFlag=a.supports.everythingExceptFlag&&!a.supports.flag,a.supports.everything||((t=a.source||{}).concatemoji?r(t.concatemoji):t.wpemoji&&t.twemoji&&(r(t.twemoji),r(t.wpemoji)))});
+//# sourceURL=https://cke.gov.pl/wp-includes/js/wp-emoji-loader.min.js
+/* ]]> */
+</script>
+
+</body>
+</html>

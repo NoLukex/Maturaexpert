@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { getFlashcards, updateFlashcardStatus, addXP, getCategoryIndex, saveCategoryIndex } from '../services/storageService';
+import { getFlashcards, updateFlashcardStatus, addXP, getCategoryIndex, saveCategoryIndex, playFeedbackSound } from '../services/storageService';
 import { Flashcard } from '../types';
 import { RotateCw, Check, X, HelpCircle, Layers, ChevronLeft, Keyboard, Book, BrainCircuit, Trophy, PieChart, BarChart3, ArrowRight } from 'lucide-react';
 import { useChatContext } from '../contexts/ChatContext';
@@ -50,6 +50,12 @@ const Vocabulary: React.FC = () => {
     return { total, mastered, progress };
   }, [cards]);
 
+  const exitStudyMode = useCallback(() => {
+    setViewMode('overview');
+    setSelectedCategory(null);
+    setIsFlipped(false);
+  }, []);
+
   // Enter Study Mode
   const startStudying = (category: string) => {
     setSelectedCategory(category);
@@ -61,6 +67,7 @@ const Vocabulary: React.FC = () => {
     
     setIsFlipped(false);
     setViewMode('study');
+    window.history.pushState({ vocabularyStudy: true, category }, '', window.location.href);
   };
 
   const activeCards = useMemo(() => {
@@ -69,6 +76,17 @@ const Vocabulary: React.FC = () => {
   }, [cards, selectedCategory]);
 
   const currentCard = activeCards[currentIndex];
+
+  useEffect(() => {
+    const onPopState = () => {
+      if (viewMode === 'study') {
+        exitStudyMode();
+      }
+    };
+
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, [viewMode, exitStudyMode]);
 
   // Update AI Context
   useEffect(() => {
@@ -105,6 +123,8 @@ const Vocabulary: React.FC = () => {
     if (status === 'mastered') addXP(5);
     else if (status === 'learning') addXP(2);
     else addXP(1);
+
+    playFeedbackSound(status === 'mastered' ? 'success' : 'error');
 
     setIsFlipped(false);
     setTimeout(() => {
@@ -251,7 +271,7 @@ const Vocabulary: React.FC = () => {
       {/* Top Bar */}
       <div className="flex items-center justify-between mb-6">
         <button 
-          onClick={() => setViewMode('overview')}
+          onClick={exitStudyMode}
           className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm font-bold uppercase tracking-wide px-3 py-2 rounded-lg hover:bg-white/5 group"
         >
           <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform"/> Wróć do listy

@@ -18,13 +18,28 @@ import {
   Smartphone, 
   Monitor 
 } from 'lucide-react';
-import { getStats } from '../services/storageService';
+import { getPreferences, updatePreferences } from '../services/storageService';
 
 const Settings: React.FC = () => {
+  const initialPreferences = getPreferences();
   const [exportCode, setExportCode] = useState<string>('');
   const [importCode, setImportCode] = useState<string>('');
   const [copySuccess, setCopySuccess] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
+  const [soundEffectsEnabled, setSoundEffectsEnabled] = useState(initialPreferences.soundEffects);
+  const [studyRemindersEnabled, setStudyRemindersEnabled] = useState(initialPreferences.studyReminders);
+
+  const toggleSoundEffects = () => {
+    const next = !soundEffectsEnabled;
+    setSoundEffectsEnabled(next);
+    updatePreferences({ soundEffects: next });
+  };
+
+  const toggleStudyReminders = () => {
+    const next = !studyRemindersEnabled;
+    setStudyRemindersEnabled(next);
+    updatePreferences({ studyReminders: next });
+  };
 
   const handleResetProgress = () => {
     if (confirm("Czy na pewno chcesz zresetować WSZYSTKIE postępy? Ta operacja jest nieodwracalna. (Ale spokojnie, imię Mateusz Wiśniewski zostanie!)")) {
@@ -250,12 +265,17 @@ const Settings: React.FC = () => {
                      <div className="text-xs text-gray-500">Dźwięki przy poprawnej odpowiedzi</div>
                   </div>
                </div>
-               <div className="w-12 h-6 bg-green-500 rounded-full relative cursor-pointer opacity-80">
-                  <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full shadow-md"></div>
-               </div>
-            </div>
+                <button
+                  type="button"
+                  aria-pressed={soundEffectsEnabled}
+                  onClick={toggleSoundEffects}
+                  className={`w-12 h-6 rounded-full relative cursor-pointer opacity-90 transition-colors ${soundEffectsEnabled ? 'bg-green-500' : 'bg-gray-600'}`}
+                >
+                   <div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow-md transition-all ${soundEffectsEnabled ? 'right-1' : 'left-1'}`}></div>
+                </button>
+             </div>
 
-            <div className="flex items-center justify-between p-4 bg-[#0A1628] rounded-xl border border-white/5">
+             <div className="flex items-center justify-between p-4 bg-[#0A1628] rounded-xl border border-white/5">
                <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400">
                      <Bell size={20}/>
@@ -265,12 +285,20 @@ const Settings: React.FC = () => {
                      <div className="text-xs text-gray-500">Codzienne powiadomienia</div>
                   </div>
                </div>
-               <div className="w-12 h-6 bg-green-500 rounded-full relative cursor-pointer opacity-80">
-                  <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full shadow-md"></div>
-               </div>
-            </div>
-         </div>
-      </div>
+                <button
+                  type="button"
+                  aria-pressed={studyRemindersEnabled}
+                  onClick={toggleStudyReminders}
+                  className={`w-12 h-6 rounded-full relative cursor-pointer opacity-90 transition-colors ${studyRemindersEnabled ? 'bg-green-500' : 'bg-gray-600'}`}
+                >
+                   <div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow-md transition-all ${studyRemindersEnabled ? 'right-1' : 'left-1'}`}></div>
+                </button>
+             </div>
+          </div>
+          <p className="text-xs text-gray-500 mt-4">
+            Przypomnienia sa wyswietlane raz dziennie po otwarciu aplikacji.
+          </p>
+       </div>
 
       {/* Danger Zone */}
       <div className="bg-red-500/5 rounded-3xl p-8 border border-red-500/20 shadow-lg">
