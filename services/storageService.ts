@@ -109,20 +109,45 @@ export const getDaysToMatura = (): number => {
 
 export const getStats = (): UserStats => {
   const stored = localStorage.getItem(STATS_KEY);
-  let stats: UserStats;
+  let parsed: unknown = null;
 
-  if (!stored) {
-    stats = { ...INITIAL_STATS };
-  } else {
-    stats = JSON.parse(stored);
-    if (!stats.mistakes) stats.mistakes = [];
-    if (!stats.unlockedAchievements) stats.unlockedAchievements = [];
+  if (stored) {
+    try {
+      parsed = JSON.parse(stored);
+    } catch {
+      parsed = null;
+    }
   }
+
+  const candidate = (parsed && typeof parsed === 'object') ? parsed as Partial<UserStats> : {};
+  const moduleProgress = (candidate.moduleProgress && typeof candidate.moduleProgress === 'object')
+    ? candidate.moduleProgress
+    : INITIAL_STATS.moduleProgress;
+
+  const stats: UserStats = {
+    ...INITIAL_STATS,
+    ...candidate,
+    mistakes: Array.isArray(candidate.mistakes) ? candidate.mistakes : [],
+    unlockedAchievements: Array.isArray(candidate.unlockedAchievements) ? candidate.unlockedAchievements : [],
+    history: Array.isArray(candidate.history) ? candidate.history : [],
+    activity: Array.isArray(candidate.activity) ? candidate.activity : [],
+    moduleProgress: {
+      ...INITIAL_STATS.moduleProgress,
+      ...moduleProgress,
+    },
+    completedTasks: typeof candidate.completedTasks === 'number' ? candidate.completedTasks : INITIAL_STATS.completedTasks,
+    xp: typeof candidate.xp === 'number' ? candidate.xp : INITIAL_STATS.xp,
+    streak: typeof candidate.streak === 'number' ? candidate.streak : INITIAL_STATS.streak,
+    level: typeof candidate.level === 'string' && candidate.level ? candidate.level : INITIAL_STATS.level,
+    name: typeof candidate.name === 'string' && candidate.name ? candidate.name : INITIAL_STATS.name,
+    lastLogin: typeof candidate.lastLogin === 'string' && candidate.lastLogin ? candidate.lastLogin : INITIAL_STATS.lastLogin,
+  };
 
   // Handle Streak Logic
   const now = new Date();
   const todayStr = now.toISOString().split('T')[0];
-  const lastLoginDate = new Date(stats.lastLogin);
+  const parsedLastLogin = new Date(stats.lastLogin);
+  const lastLoginDate = Number.isNaN(parsedLastLogin.getTime()) ? new Date(0) : parsedLastLogin;
   const lastLoginStr = lastLoginDate.toISOString().split('T')[0];
 
   if (todayStr !== lastLoginStr) {
