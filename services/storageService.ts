@@ -39,7 +39,7 @@ const INITIAL_STATS: UserStats = {
   lastLogin: '',
   updatedAt: Date.now(),
   history: [],
-  mistakes: [], 
+  mistakes: [],
   unlockedAchievements: [], // Start empty
   activity: [],
   moduleProgress: {
@@ -137,11 +137,11 @@ export const ACHIEVEMENTS_LIST: Achievement[] = [
   { id: 'streak_30', title: 'Nawyk Sukcesu', description: 'Ucz się przez 30 dni z rzędu', icon: 'Zap', condition: (s) => s.streak >= 30, unlocked: false },
   { id: 'xp_1000', title: 'Ambitny Uczeń', description: 'Zdobądź 1000 XP', icon: 'Star', condition: (s) => s.xp >= 1000, unlocked: false },
   { id: 'xp_5000', title: 'Matura Master', description: 'Zdobądź 5000 XP', icon: 'Trophy', condition: (s) => s.xp >= 5000, unlocked: false },
-  
+
   // VOCABULARY
   { id: 'vocab_10', title: 'Pierwsze Słowa', description: 'Opanuj 10 fiszek (status: Umiem)', icon: 'BookA', condition: (s) => getFlashcards().filter(c => c.status === 'mastered').length >= 10, unlocked: false },
   { id: 'vocab_50', title: 'Poliglota', description: 'Opanuj 50 fiszek', icon: 'BookOpen', condition: (s) => getFlashcards().filter(c => c.status === 'mastered').length >= 50, unlocked: false },
-  
+
   // GRAMMAR
   { id: 'grammar_5', title: 'Gramatyczny Ninja', description: 'Rozwiąż 5 zadań z gramatyki', icon: 'Library', condition: (s) => s.history.filter(h => h.module === 'grammar').length >= 5, unlocked: false },
   { id: 'grammar_perfect', title: 'Bezbłędny', description: 'Zdobądź 100% w zadaniu z gramatyki', icon: 'CheckCircle', condition: (s) => s.history.some(h => h.module === 'grammar' && h.score === h.maxScore && h.maxScore > 0), unlocked: false },
@@ -160,18 +160,22 @@ export const ACHIEVEMENTS_LIST: Achievement[] = [
   { id: 'exam_top', title: 'Prymus', description: 'Uzyskaj wynik >80% z egzaminu', icon: 'Crown', condition: (s) => s.history.some(h => h.module === 'exam' && (h.score / h.maxScore) >= 0.8), unlocked: false },
 
   // TIME & EFFORT
-  { id: 'night_owl', title: 'Nocny Marek', description: 'Ucz się po godzinie 22:00', icon: 'Moon', condition: (s) => {
+  {
+    id: 'night_owl', title: 'Nocny Marek', description: 'Ucz się po godzinie 22:00', icon: 'Moon', condition: (s) => {
       const last = new Date(s.lastLogin);
       return last.getHours() >= 22 || last.getHours() < 4;
-  }, unlocked: false },
-  { id: 'early_bird', title: 'Ranny Ptaszek', description: 'Ucz się przed 8:00 rano', icon: 'Sun', condition: (s) => {
+    }, unlocked: false
+  },
+  {
+    id: 'early_bird', title: 'Ranny Ptaszek', description: 'Ucz się przed 8:00 rano', icon: 'Sun', condition: (s) => {
       const last = new Date(s.lastLogin);
       return last.getHours() >= 5 && last.getHours() < 8;
-  }, unlocked: false },
+    }, unlocked: false
+  },
 
   // MISTAKES
   { id: 'mistake_add', title: 'Uczę się na błędach', description: 'Dodaj zadanie do Banku Błędów', icon: 'AlertOctagon', condition: (s) => s.mistakes.length > 0, unlocked: false },
-  { id: 'mistake_clean', title: 'Czysta Karta', description: 'Wyczyść Bank Błędów (miej 0 po wcześniejszym dodaniu)', icon: 'Trash2', condition: (s) => s.mistakes.length === 0 && s.history.length > 10, unlocked: false }, 
+  { id: 'mistake_clean', title: 'Czysta Karta', description: 'Wyczyść Bank Błędów (miej 0 po wcześniejszym dodaniu)', icon: 'Trash2', condition: (s) => s.mistakes.length === 0 && s.history.length > 10, unlocked: false },
 ];
 
 export const getDaysToMatura = (): number => {
@@ -309,18 +313,27 @@ export const getStats = (): UserStats => {
   }
 
   if (shouldPersist) {
-    saveStats(stats);
+    // Use silent save to avoid triggering STATS_UPDATED_EVENT during reads
+    stats = saveStatsSilent(stats);
   }
 
   return stats;
 };
 
-const saveStats = (stats: UserStats) => {
+// Silent internal save — used by getStats() to persist normalised data
+// WITHOUT emitting STATS_UPDATED_EVENT, which would cause an infinite loop:
+// getStats() → saveStats() → STATS_UPDATED_EVENT → refreshStats() → getStats() → ...
+const saveStatsSilent = (stats: UserStats): UserStats => {
   const payload: UserStats = {
     ...stats,
     updatedAt: Date.now()
   };
   localStorage.setItem(STATS_KEY, JSON.stringify(payload));
+  return payload;
+};
+
+const saveStats = (stats: UserStats) => {
+  const payload = saveStatsSilent(stats);
   window.dispatchEvent(new CustomEvent(STATS_UPDATED_EVENT, { detail: payload }));
 };
 
@@ -371,7 +384,7 @@ const safeParse = <T>(raw: string | null, fallback: T): T => {
 const checkAchievements = (stats: UserStats): UserStats => {
   let hasNew = false;
   const currentUnlocked = new Set(stats.unlockedAchievements);
-  
+
   ACHIEVEMENTS_LIST.forEach(ach => {
     // Only check if NOT already unlocked
     if (!currentUnlocked.has(ach.id)) {
@@ -379,8 +392,8 @@ const checkAchievements = (stats: UserStats): UserStats => {
         currentUnlocked.add(ach.id);
         hasNew = true;
         // Dispatch event for UI Notification
-        window.dispatchEvent(new CustomEvent('achievement-unlocked', { 
-          detail: { title: ach.title, icon: ach.icon } 
+        window.dispatchEvent(new CustomEvent('achievement-unlocked', {
+          detail: { title: ach.title, icon: ach.icon }
         }));
       }
     }
@@ -396,7 +409,7 @@ export const updateStats = (newStats: Partial<UserStats>) => {
   let current = getStats();
   // Merge updates
   let updated = { ...current, ...newStats };
-  
+
   // Check achievements on the updated stats (BEFORE saving)
   updated = checkAchievements(updated);
 
@@ -503,12 +516,12 @@ export const toggleDailyPlanTask = (index: number) => {
   const currentStatus = getDailyPlanStatus();
   const newStatus = [...currentStatus];
   newStatus[index] = !newStatus[index];
-  
+
   localStorage.setItem(DAILY_PLAN_KEY, JSON.stringify({
     date: today,
     completed: newStatus
   }));
-  
+
   return newStatus;
 };
 
@@ -523,9 +536,9 @@ export const saveMistake = (
 ) => {
   const stats = getStats();
   const currentMistakes = stats.mistakes || [];
-  
+
   const exists = currentMistakes.some(m => m.question === question && m.module === module);
-  
+
   if (!exists) {
     const newMistake: Mistake = {
       id: Date.now().toString() + Math.random().toString(36).substr(2, 5),
@@ -536,8 +549,8 @@ export const saveMistake = (
       context,
       timestamp: Date.now()
     };
-    
-    const updatedMistakes = [newMistake, ...currentMistakes].slice(0, 50); 
+
+    const updatedMistakes = [newMistake, ...currentMistakes].slice(0, 50);
     updateStats({ mistakes: updatedMistakes });
   }
 };
@@ -552,27 +565,27 @@ export const removeMistake = (id: string) => {
 // --- END MISTAKE MANAGEMENT ---
 
 export const saveTaskResult = (
-  module: TaskResult['module'], 
-  score: number, 
+  module: TaskResult['module'],
+  score: number,
   maxScore: number,
-  specificTaskId?: string 
+  specificTaskId?: string
 ) => {
   const current = getStats();
-  
+
   const result: TaskResult = {
-    taskId: specificTaskId || Date.now().toString(), 
+    taskId: specificTaskId || Date.now().toString(),
     module,
     score,
     maxScore,
     date: new Date().toISOString()
   };
-  
+
   const newHistory = [...current.history, result];
   const activityPatch = touchDailyActivity(current, 1);
 
   // IMPORTANT: We do not call updateStats here directly to avoid double saving, 
   // but we construct the object for updateStats to handle achievements.
-  
+
   updateStats({
     history: newHistory,
     ...activityPatch
@@ -642,7 +655,7 @@ export const updateFlashcardStatus = (id: string, status: Flashcard['status']) =
   const masteredCount = updated.filter(c => c.status === 'mastered').length;
   const totalCount = updated.length;
   const vocabProgress = Math.round((masteredCount / totalCount) * 100);
-  
+
   const currentStats = getStats();
   updateStats({
     moduleProgress: {
@@ -666,10 +679,10 @@ export const saveCategoryIndex = (category: string, index: number) => {
 export const getAverageScore = (): number => {
   const stats = getStats();
   if (stats.history.length === 0) return 0;
-  
+
   const totalPercentage = stats.history.reduce((acc, curr) => {
     return acc + (curr.maxScore > 0 ? (curr.score / curr.maxScore) : 0);
   }, 0);
-  
+
   return Math.round((totalPercentage / stats.history.length) * 100);
 };
