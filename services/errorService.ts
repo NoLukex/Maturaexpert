@@ -5,7 +5,7 @@ export class AIError extends Error {
     constructor(
         message: string,
         public code: string = 'AI_ERROR',
-        public details?: Record<string, any>
+        public details?: Record<string, unknown>
     ) {
         super(message);
         this.name = 'AIError';
@@ -26,12 +26,12 @@ export async function retryWithBackoff<T>(
     backoffFactor: number = 2,
     timeout: number = 60000 // 60s timeout for 70B model
 ): Promise<T> {
-    let lastError: any;
+    let lastError: unknown;
 
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
         try {
             return await fn();
-        } catch (error: any) {
+        } catch (error: unknown) {
             lastError = error;
 
             // Don't retry if it's a permanent error (e.g. 401 Unauthorized, 400 Bad Request)
@@ -52,7 +52,7 @@ export async function retryWithBackoff<T>(
     throw lastError;
 }
 
-export function handleAIError(error: any): AIError {
+export function handleAIError(error: unknown): AIError {
     console.error("AI Service Error:", error);
 
     if (error instanceof AIError) return error;
@@ -70,7 +70,9 @@ export function handleAIError(error: any): AIError {
         return new AIError(`Błąd API: ${error.message}`, "API_ERROR", { status: error.status });
     }
 
-    if (error.message && (error.message.includes('fetch') || error.message.includes('network'))) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+
+    if (errorMessage && (errorMessage.includes('fetch') || errorMessage.includes('network'))) {
         return new AIError("Błąd połączenia sieciowego. Sprawdź internet.", "NETWORK_ERROR");
     }
 
