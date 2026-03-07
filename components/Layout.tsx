@@ -30,6 +30,32 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
+// ⚡ Bolt Optimization: Extracted NavItem outside of Layout and wrapped in React.memo
+// This prevents React from completely unmounting and remounting all 20+ NavItems on every Layout render.
+// Now, NavItem only re-renders when its specific props (like currentView) change.
+const NavItem = React.memo(({ to, icon: Icon, label, viewName, currentView, onClick }: { to: string; icon: React.ComponentType<{ size?: number; className?: string }>; label: string; viewName: ViewState; currentView: ViewState; onClick: () => void }) => (
+  <Link
+    to={to}
+    onClick={onClick}
+    className={`w-full flex items-center space-x-3 px-4 py-3.5 rounded-2xl transition-all mb-1.5 group relative overflow-hidden ${currentView === viewName
+      ? 'text-matura-bg font-bold shadow-[0_0_20px_rgba(245,197,24,0.3)]'
+      : 'text-gray-400 hover:text-white'
+      }`}
+  >
+    {/* Active Background */}
+    {currentView === viewName && (
+      <div className="absolute inset-0 bg-matura-accent" />
+    )}
+    {/* Hover Background */}
+    {currentView !== viewName && (
+      <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+    )}
+
+    <Icon size={20} className={`relative z-10 transition-transform duration-300 group-hover:scale-110 group-active:scale-95 ${currentView === viewName ? 'text-matura-bg' : 'text-gray-400 group-hover:text-white'}`} />
+    <span className="relative z-10 text-sm tracking-wide">{label}</span>
+  </Link>
+));
+
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [notification, setNotification] = useState<{ title: string; icon: string; kind: 'achievement' | 'reminder' } | null>(null);
@@ -77,28 +103,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     };
   }, []);
 
-  const NavItem = ({ to, icon: Icon, label, viewName }: { to: string; icon: React.ComponentType<{ size?: number; className?: string }>; label: string; viewName: ViewState }) => (
-    <Link
-      to={to}
-      onClick={() => setMobileMenuOpen(false)}
-      className={`w-full flex items-center space-x-3 px-4 py-3.5 rounded-2xl transition-all mb-1.5 group relative overflow-hidden ${currentView === viewName
-        ? 'text-matura-bg font-bold shadow-[0_0_20px_rgba(245,197,24,0.3)]'
-        : 'text-gray-400 hover:text-white'
-        }`}
-    >
-      {/* Active Background */}
-      {currentView === viewName && (
-        <div className="absolute inset-0 bg-matura-accent" />
-      )}
-      {/* Hover Background */}
-      {currentView !== viewName && (
-        <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-      )}
-
-      <Icon size={20} className={`relative z-10 transition-transform duration-300 group-hover:scale-110 group-active:scale-95 ${currentView === viewName ? 'text-matura-bg' : 'text-gray-400 group-hover:text-white'}`} />
-      <span className="relative z-10 text-sm tracking-wide">{label}</span>
-    </Link>
-  );
+  // ⚡ Bolt Optimization: Memoized the onClick handler to keep the prop reference stable.
+  // This ensures React.memo on NavItem can effectively prevent unnecessary re-renders.
+  const handleNavClick = React.useCallback(() => {
+    setMobileMenuOpen(false);
+  }, []);
 
   const isTaskView = currentView !== 'dashboard';
 
@@ -146,19 +155,19 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
 
         <nav className="flex-1 px-6 py-4 space-y-1 overflow-y-auto custom-scrollbar">
-          <NavItem to="/" viewName="dashboard" icon={LayoutDashboard} label="Dashboard" />
+          <NavItem to="/" viewName="dashboard" icon={LayoutDashboard} label="Dashboard" currentView={currentView} onClick={handleNavClick} />
 
           <div className="my-8">
             <p className="px-4 text-[10px] font-bold text-gray-500 uppercase mb-4 tracking-widest flex items-center gap-2">
               <span className="w-8 h-[1px] bg-white/10"></span> Moduły
             </p>
             <div className="space-y-1">
-              <NavItem to="/vocabulary" viewName="vocabulary" icon={BookA} label="Słownictwo" />
-              <NavItem to="/grammar" viewName="grammar" icon={Library} label="Gramatyka" />
-              <NavItem to="/listening" viewName="listening" icon={Headphones} label="Słuchanie" />
-              <NavItem to="/reading" viewName="reading" icon={FileText} label="Czytanie" />
-              <NavItem to="/writing" viewName="writing" icon={PenTool} label="Pisanie (AI)" />
-              <NavItem to="/speaking" viewName="speaking" icon={BrainCircuit} label="Matura Ustna" />
+              <NavItem to="/vocabulary" viewName="vocabulary" icon={BookA} label="Słownictwo" currentView={currentView} onClick={handleNavClick} />
+              <NavItem to="/grammar" viewName="grammar" icon={Library} label="Gramatyka" currentView={currentView} onClick={handleNavClick} />
+              <NavItem to="/listening" viewName="listening" icon={Headphones} label="Słuchanie" currentView={currentView} onClick={handleNavClick} />
+              <NavItem to="/reading" viewName="reading" icon={FileText} label="Czytanie" currentView={currentView} onClick={handleNavClick} />
+              <NavItem to="/writing" viewName="writing" icon={PenTool} label="Pisanie (AI)" currentView={currentView} onClick={handleNavClick} />
+              <NavItem to="/speaking" viewName="speaking" icon={BrainCircuit} label="Matura Ustna" currentView={currentView} onClick={handleNavClick} />
             </div>
           </div>
 
@@ -166,8 +175,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <p className="px-4 text-[10px] font-bold text-gray-500 uppercase mb-4 tracking-widest flex items-center gap-2">
               <span className="w-8 h-[1px] bg-white/10"></span> Egzaminy
             </p>
-            <NavItem to="/exam" viewName="exam" icon={GraduationCap} label="Arkusze Maturalne" />
-            <NavItem to="/mistakes" viewName="mistakes" icon={AlertOctagon} label="Bank Błędów" />
+            <NavItem to="/exam" viewName="exam" icon={GraduationCap} label="Arkusze Maturalne" currentView={currentView} onClick={handleNavClick} />
+            <NavItem to="/mistakes" viewName="mistakes" icon={AlertOctagon} label="Bank Błędów" currentView={currentView} onClick={handleNavClick} />
           </div>
         </nav>
 
@@ -199,7 +208,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
           )}
 
-          <NavItem to="/settings" viewName="settings" icon={Settings} label="Ustawienia" />
+          <NavItem to="/settings" viewName="settings" icon={Settings} label="Ustawienia" currentView={currentView} onClick={handleNavClick} />
 
           <div className="flex items-center gap-3 mt-4 pt-4 border-t border-white/5 group cursor-default">
             <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-matura-accent to-yellow-600 flex items-center justify-center text-matura-bg font-bold shadow-md group-hover:scale-105 transition-transform">MW</div>
@@ -284,16 +293,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {mobileMenuOpen && (
           <div className="fixed inset-0 z-40 bg-[#050B14]/95 backdrop-blur-xl pt-24 px-6 animate-fade-in">
             <nav className="space-y-2">
-              <NavItem to="/" viewName="dashboard" icon={LayoutDashboard} label="Dashboard" />
-              <NavItem to="/vocabulary" viewName="vocabulary" icon={BookA} label="Słownictwo" />
-              <NavItem to="/grammar" viewName="grammar" icon={Library} label="Gramatyka" />
-              <NavItem to="/listening" viewName="listening" icon={Headphones} label="Słuchanie" />
-              <NavItem to="/reading" viewName="reading" icon={FileText} label="Czytanie" />
-              <NavItem to="/writing" viewName="writing" icon={PenTool} label="Pisanie (AI)" />
-              <NavItem to="/speaking" viewName="speaking" icon={BrainCircuit} label="Matura Ustna" />
-              <NavItem to="/mistakes" viewName="mistakes" icon={AlertOctagon} label="Bank Błędów" />
-              <NavItem to="/exam" viewName="exam" icon={GraduationCap} label="Arkusze" />
-              <NavItem to="/settings" viewName="settings" icon={Settings} label="Ustawienia" />
+              <NavItem to="/" viewName="dashboard" icon={LayoutDashboard} label="Dashboard" currentView={currentView} onClick={handleNavClick} />
+              <NavItem to="/vocabulary" viewName="vocabulary" icon={BookA} label="Słownictwo" currentView={currentView} onClick={handleNavClick} />
+              <NavItem to="/grammar" viewName="grammar" icon={Library} label="Gramatyka" currentView={currentView} onClick={handleNavClick} />
+              <NavItem to="/listening" viewName="listening" icon={Headphones} label="Słuchanie" currentView={currentView} onClick={handleNavClick} />
+              <NavItem to="/reading" viewName="reading" icon={FileText} label="Czytanie" currentView={currentView} onClick={handleNavClick} />
+              <NavItem to="/writing" viewName="writing" icon={PenTool} label="Pisanie (AI)" currentView={currentView} onClick={handleNavClick} />
+              <NavItem to="/speaking" viewName="speaking" icon={BrainCircuit} label="Matura Ustna" currentView={currentView} onClick={handleNavClick} />
+              <NavItem to="/mistakes" viewName="mistakes" icon={AlertOctagon} label="Bank Błędów" currentView={currentView} onClick={handleNavClick} />
+              <NavItem to="/exam" viewName="exam" icon={GraduationCap} label="Arkusze" currentView={currentView} onClick={handleNavClick} />
+              <NavItem to="/settings" viewName="settings" icon={Settings} label="Ustawienia" currentView={currentView} onClick={handleNavClick} />
             </nav>
           </div>
         )}
