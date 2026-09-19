@@ -138,7 +138,7 @@ const Speaking: React.FC = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [selectedVoiceName, setSelectedVoiceName] = useState<string>('');
-  const [isHQ, setIsHQ] = useState(true); // Default to HQ for better UX
+  const [isHQ, setIsHQ] = useState(false); // Default to local speech synthesis for rock-solid reliability
 
   // New: Select Exam State
   const [selectedExamId, setSelectedExamId] = useState<string>(SPEAKING_EXAMS[0].id);
@@ -446,9 +446,14 @@ const Speaking: React.FC = () => {
       await speak(aiResponse);
 
     } catch (e) {
-      console.error(e);
-      setError("Błąd połączenia z NVIDIA NIM.");
-      setStatus('idle');
+      console.error("Speaking error:", e);
+      const fallbackMsg = "Thank you. Let us move on. Could you provide more details about this?";
+      setMessages(prev => [...prev, { role: 'assistant', text: fallbackMsg, stage }]);
+      try {
+        await speak(fallbackMsg);
+      } catch {
+        setStatus('idle');
+      }
     }
   };
 

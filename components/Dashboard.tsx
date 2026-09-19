@@ -2,13 +2,16 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserStats } from '../types';
-import { getDaysToMatura, ACHIEVEMENTS_LIST, getDailyPlanStatus, toggleDailyPlanTask, getLocalDateKey } from '../services/storageService';
+import {
+  getDaysToMatura, ACHIEVEMENTS_LIST, getDailyPlanStatus, toggleDailyPlanTask, getLocalDateKey,
+  getDailyChallengeStatus, completeDailyChallenge
+} from '../services/storageService';
 import {
   Zap, Trophy, Target, BookOpen, Clock, CheckCircle, BrainCircuit,
   AlertOctagon, BookA, Library, Headphones, FileText, Star, Award,
   Crown, Moon, Sun, Trash2, CheckSquare, Square,
   Languages, Lightbulb, Dumbbell, Heart, Flame, RotateCw, Check,
-  Car, Hammer
+  Car, Hammer, Volume2, Sparkles, CheckCircle2, Shuffle, ArrowRight
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import Card from './ui/Card';
@@ -20,7 +23,7 @@ interface DashboardProps {
 
 // Icon mapping
 const ICON_MAP: Record<string, any> = {
-  Dumbbell, Heart, Zap, BrainCircuit, Trophy, Star, BookOpen, Car, Hammer, Lightbulb
+  Dumbbell, Heart, Zap, BrainCircuit, Trophy, Star, BookOpen, Car, Hammer, Lightbulb, Clock, Trash2, BookA, Volume2, Sparkles
 };
 
 // --- 50 UNIKALNYCH ZDAŃ (MATEUSZ LORE) ---
@@ -89,6 +92,15 @@ const MATEUSZ_CHALLENGES = [
   { en: "I want to be rich and famous.", pl: "Chcę być bogaty i sławny.", icon: "Star" }
 ];
 
+const getChallengeCategory = (index: number) => {
+  if (index < 10) return { label: 'Hania & Miłość', color: 'text-pink-400 bg-pink-500/10 border-pink-500/20' };
+  if (index < 18) return { label: 'Mustang Wujka', color: 'text-blue-400 bg-blue-500/10 border-blue-500/20' };
+  if (index < 27) return { label: 'Siłownia & Krystian', color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' };
+  if (index < 34) return { label: 'Byli & Drama', color: 'text-purple-400 bg-purple-500/10 border-purple-500/20' };
+  if (index < 40) return { label: 'Rurki & Moda', color: 'text-amber-400 bg-amber-500/10 border-amber-500/20' };
+  return { label: 'Szkoła & Życie', color: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20' };
+};
+
 const Dashboard: React.FC<DashboardProps> = ({ stats }) => {
   const navigate = useNavigate();
   // --- DAILY PLANNER STATE ---
@@ -97,21 +109,62 @@ const Dashboard: React.FC<DashboardProps> = ({ stats }) => {
   // --- CHALLENGE STATE ---
   const [isFlipped, setIsFlipped] = useState(false);
   const [challengeSolved, setChallengeSolved] = useState(false);
+  const [challengeIndex, setChallengeIndex] = useState(() => {
+    const daysSinceEpoch = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+    return daysSinceEpoch % MATEUSZ_CHALLENGES.length;
+  });
+  const [userAttempt, setUserAttempt] = useState('');
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [challengeNotice, setChallengeNotice] = useState<string | null>(null);
 
   // Deterministic daily challenge
   const currentChallenge = useMemo(() => {
-    const daysSinceEpoch = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
-    const index = daysSinceEpoch % MATEUSZ_CHALLENGES.length;
-    return MATEUSZ_CHALLENGES[index];
-  }, []);
+    return MATEUSZ_CHALLENGES[challengeIndex % MATEUSZ_CHALLENGES.length];
+  }, [challengeIndex]);
+
+  const currentCategory = useMemo(() => {
+    return getChallengeCategory(challengeIndex % MATEUSZ_CHALLENGES.length);
+  }, [challengeIndex]);
 
   useEffect(() => {
     setPlanCompleted(getDailyPlanStatus());
+    const status = getDailyChallengeStatus();
+    setChallengeSolved(status.solved);
   }, []);
 
   const handlePlanToggle = (index: number) => {
     const newStatus = toggleDailyPlanTask(index);
     setPlanCompleted(newStatus);
+  };
+
+  const handleSolveChallenge = () => {
+    const res = completeDailyChallenge(25);
+    setChallengeSolved(true);
+    setPlanCompleted(getDailyPlanStatus());
+    setChallengeNotice(res.xpAwarded > 0 ? 'Gratulacje! +25 XP dodane do Twojego konta! 🏆' : 'Wyzwanie zaliczone na dziś!');
+    setTimeout(() => setChallengeNotice(null), 4000);
+  };
+
+  const handleNextChallenge = () => {
+    setIsFlipped(false);
+    setUserAttempt('');
+    setChallengeIndex((prev) => (prev + 1) % MATEUSZ_CHALLENGES.length);
+  };
+
+  const speakSentence = (text: string) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-GB';
+      u.rate = 0.88;
+      setIsPlayingAudio(true);
+      u.onend = () => setIsPlayingAudio(false);
+      u.onerror = () => setIsPlayingAudio(false);
+      window.speechSynthesis.speak(u);
+    } catch {
+      setIsPlayingAudio(false);
+    }
   };
 
   const tips = [
@@ -246,73 +299,197 @@ const Dashboard: React.FC<DashboardProps> = ({ stats }) => {
         {/* Right Column: Interactive Daily Challenge & Tip */}
         <div className="flex flex-col gap-6 h-full min-h-[400px]">
 
-          {/* 3D FLIP CARD CHALLENGE */}
-          <div className="perspective-1000 flex-1 relative h-48 sm:h-auto">
-            <div
-              className={`relative w-full h-full transition-transform duration-500 transform-style-3d shadow-xl will-change-transform ${isFlipped ? 'rotate-y-180' : ''}`}
-            >
-              {/* --- FRONT FACE --- */}
-              <div className={`absolute inset-0 backface-hidden bg-gradient-to-br from-[#1e293b] to-[#0f172a] rounded-3xl p-6 border border-white/10 flex flex-col justify-between overflow-hidden shadow-2xl ${isFlipped ? 'pointer-events-none' : 'pointer-events-auto'}`}>
-                {/* Background decoration */}
-                <div className="absolute -bottom-4 -right-4 text-white/5 rotate-12 transform scale-150 pointer-events-none">
-                  <ChallengeIcon size={120} />
-                </div>
+          {/* INTERACTIVE DAILY CHALLENGE */}
+          <div
+            className={`flex-1 rounded-3xl p-6 transition-all duration-300 border relative flex flex-col justify-between min-h-[310px] shadow-2xl overflow-hidden ${
+              isFlipped
+                ? 'bg-gradient-to-br from-[#1c2847] via-[#0f1b33] to-[#0a1224] border-matura-accent/35 shadow-[0_0_35px_rgba(245,197,24,0.12)]'
+                : 'bg-gradient-to-br from-[#1e293b] to-[#0f172a] border-white/10 hover:border-white/20'
+            }`}
+          >
+            {/* Background decoration watermark */}
+            <div className="absolute -bottom-5 -right-5 text-white/5 rotate-12 transform scale-150 pointer-events-none transition-transform duration-500">
+              <ChallengeIcon size={130} />
+            </div>
 
-                <div className="flex justify-between items-start relative z-10">
-                  <div className="flex items-center gap-2 text-matura-accent text-xs font-bold uppercase tracking-wider bg-matura-accent/5 px-2 py-1 rounded-lg border border-matura-accent/10">
-                    <Zap size={14} className="fill-current" /> Wyzwanie Dnia
+            {/* Top Toolbar */}
+            <div className="relative z-10 flex items-center justify-between gap-2 flex-wrap mb-3">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="flex items-center gap-1.5 text-matura-accent text-xs font-bold uppercase tracking-wider bg-matura-accent/10 px-2.5 py-1 rounded-lg border border-matura-accent/20">
+                  <Zap size={13} className="fill-current" /> Wyzwanie Dnia
+                </span>
+                <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-md border ${currentCategory.color}`}>
+                  {currentCategory.label}
+                </span>
+              </div>
+
+              {challengeSolved ? (
+                <span className="text-green-400 text-xs font-bold flex items-center gap-1 bg-green-500/10 border border-green-500/20 px-2.5 py-1 rounded-full animate-fade-in">
+                  <CheckCircle2 size={13} /> Zaliczone (+25 XP)
+                </span>
+              ) : (
+                <span className="text-amber-300 text-[11px] font-bold flex items-center gap-1 bg-amber-400/10 border border-amber-400/20 px-2.5 py-1 rounded-full">
+                  <Sparkles size={12} /> +25 XP za rozwiązanie
+                </span>
+              )}
+            </div>
+
+            {/* Challenge Notice / Toast */}
+            {challengeNotice && (
+              <div className="relative z-10 mb-3 p-2.5 rounded-xl bg-matura-accent/15 border border-matura-accent/30 text-matura-accent text-xs font-bold flex items-center gap-2 animate-fade-in shadow-lg">
+                <Sparkles size={14} className="animate-spin" /> {challengeNotice}
+              </div>
+            )}
+
+            {/* Body: Front or Flipped View */}
+            {!isFlipped ? (
+              /* --- FRONT VIEW: English Sentence --- */
+              <div className="relative z-10 flex-1 flex flex-col justify-between gap-3 my-1">
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <p className="text-gray-400 text-[11px] font-bold uppercase tracking-widest">
+                      Przetłumacz na język polski:
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => speakSentence(currentChallenge.en)}
+                      className="text-xs text-cyan-300 hover:text-cyan-200 flex items-center gap-1 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/20 px-2 py-1 rounded-lg transition-colors"
+                      title="Posłuchaj wymowy"
+                    >
+                      <Volume2 size={13} className={isPlayingAudio ? 'animate-pulse text-matura-accent' : ''} />
+                      <span className="text-[11px] font-medium">{isPlayingAudio ? 'Mówię...' : 'Wymowa'}</span>
+                    </button>
                   </div>
-                </div>
 
-                <div className="relative z-10 flex-1 flex flex-col justify-center my-2">
-                  <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest mb-2">Przetłumacz w myślach:</p>
-                  <p className="text-xl md:text-2xl font-bold text-white leading-tight font-display drop-shadow-md">
+                  <p className="text-xl sm:text-2xl font-bold text-white leading-snug font-display drop-shadow-md">
                     "{currentChallenge.en}"
                   </p>
                 </div>
 
-                <div className="relative z-10 flex items-center justify-between border-t border-white/5 pt-3">
+                {/* Optional Quick Test Input */}
+                <div className="mt-1">
+                  <div className="relative flex items-center">
+                    <input
+                      type="text"
+                      value={userAttempt}
+                      onChange={(e) => setUserAttempt(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') setIsFlipped(true);
+                      }}
+                      placeholder="Wpisz tłumaczenie (opcjonalnie)..."
+                      className="w-full text-xs bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:border-matura-accent/50 pr-8"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setIsFlipped(true)}
+                      title="Sprawdź tłumaczenie"
+                      className="absolute right-2 text-gray-400 hover:text-matura-accent transition-colors"
+                    >
+                      <ArrowRight size={14} />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Bottom Bar */}
+                <div className="flex items-center justify-between gap-2 pt-3 border-t border-white/5">
                   <button
+                    type="button"
                     onClick={() => setIsFlipped(true)}
-                    className="text-xs text-gray-300 flex items-center gap-1 bg-white/5 hover:bg-white/10 border border-white/10 px-2 py-1 rounded-md transition-colors"
+                    className="text-xs text-gray-200 hover:text-white flex items-center gap-1.5 bg-white/10 hover:bg-white/15 border border-white/15 px-3 py-2 rounded-xl font-medium transition-colors shadow-sm"
                   >
-                    <RotateCw size={12} /> Pokaż tłumaczenie
+                    <RotateCw size={13} /> Pokaż odpowiedź
                   </button>
-                  {challengeSolved && <span className="text-green-500 text-xs font-bold flex items-center gap-1 bg-green-500/10 px-2 py-1 rounded"><CheckCircle size={12} /> Zaliczone</span>}
+
+                  <div className="flex items-center gap-2">
+                    {!challengeSolved && (
+                      <button
+                        type="button"
+                        onClick={handleSolveChallenge}
+                        className="bg-matura-accent text-matura-bg px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 hover:bg-yellow-400 transition-colors shadow-lg active:scale-95"
+                      >
+                        <Check size={14} /> Umiem to! (+25 XP)
+                      </button>
+                    )}
+                    {challengeSolved && (
+                      <button
+                        type="button"
+                        onClick={handleNextChallenge}
+                        className="text-xs text-gray-300 hover:text-white flex items-center gap-1.5 bg-white/5 hover:bg-white/10 border border-white/10 px-3 py-2 rounded-xl transition-colors"
+                        title="Wylosuj inne zdanie"
+                      >
+                        <Shuffle size={13} /> Kolejne zdanie
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
+            ) : (
+              /* --- BACK VIEW: Polish Translation & Verification --- */
+              <div className="relative z-10 flex-1 flex flex-col justify-between gap-3 my-1 animate-fade-in">
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <p className="text-matura-accent/80 text-[11px] font-bold uppercase tracking-widest flex items-center gap-1">
+                      <Languages size={13} /> Prawidłowe tłumaczenie:
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => speakSentence(currentChallenge.en)}
+                      className="text-xs text-gray-300 hover:text-white flex items-center gap-1 bg-white/5 hover:bg-white/10 border border-white/10 px-2 py-1 rounded-lg transition-colors"
+                      title="Posłuchaj ponownie"
+                    >
+                      <Volume2 size={13} className={isPlayingAudio ? 'animate-pulse text-matura-accent' : ''} />
+                      <span className="text-[11px]">Posłuchaj EN</span>
+                    </button>
+                  </div>
 
-              {/* --- BACK FACE --- */}
-              <div className={`absolute inset-0 backface-hidden rotate-y-180 bg-gradient-to-br from-matura-accent/10 to-[#0f172a] rounded-3xl p-6 border border-matura-accent/30 flex flex-col justify-between overflow-hidden backdrop-blur-xl shadow-[0_0_30px_rgba(245,197,24,0.1)] ${isFlipped ? 'pointer-events-auto' : 'pointer-events-none'}`}>
-                <div className="flex items-center gap-2 text-white text-xs font-bold uppercase tracking-wider mb-2 opacity-60">
-                  <Languages size={14} /> Tłumaczenie
-                </div>
-
-                <div className="flex-1 flex flex-col justify-center">
-                  <p className="text-lg md:text-xl font-bold text-matura-accent leading-tight">
+                  <p className="text-lg sm:text-xl font-bold text-matura-accent leading-snug drop-shadow-sm">
                     "{currentChallenge.pl}"
                   </p>
-                </div>
 
-                <div className="pt-4 flex justify-between items-center">
-                  <button
-                    onClick={(e) => { e.stopPropagation(); setIsFlipped(false); }}
-                    className="text-xs text-gray-400 hover:text-white underline decoration-white/20 hover:decoration-white transition-all"
-                  >
-                    Wróć
-                  </button>
+                  <p className="text-xs text-gray-400 mt-2 italic">
+                    Oryginał: <span className="text-gray-300">"{currentChallenge.en}"</span>
+                  </p>
 
-                  {!challengeSolved && (
-                    <button
-                      onClick={(e) => { e.stopPropagation(); setChallengeSolved(true); setIsFlipped(false); }}
-                      className="bg-matura-accent text-matura-bg px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 hover:bg-yellow-400 transition-colors shadow-lg"
-                    >
-                      <Check size={14} /> Umiem to!
-                    </button>
+                  {userAttempt.trim() && (
+                    <div className="mt-2.5 p-2 rounded-xl bg-white/5 border border-white/10 text-xs">
+                      <span className="text-gray-400">Twoja próba:</span>{' '}
+                      <span className="text-white font-medium">"{userAttempt}"</span>
+                    </div>
                   )}
                 </div>
+
+                {/* Bottom Bar */}
+                <div className="flex items-center justify-between gap-2 pt-3 border-t border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => setIsFlipped(false)}
+                    className="text-xs text-gray-400 hover:text-white underline decoration-white/20 hover:decoration-white transition-all"
+                  >
+                    ← Wróć do pytania
+                  </button>
+
+                  <div className="flex items-center gap-2">
+                    {!challengeSolved ? (
+                      <button
+                        type="button"
+                        onClick={handleSolveChallenge}
+                        className="bg-matura-accent text-matura-bg px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 hover:bg-yellow-400 transition-colors shadow-lg active:scale-95"
+                      >
+                        <Check size={14} /> Znam to! (+25 XP)
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={handleNextChallenge}
+                        className="bg-white/10 hover:bg-white/15 text-white border border-white/15 px-3.5 py-2 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-colors"
+                      >
+                        <Shuffle size={13} /> Następne zdanie
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Tip of the Day - VISIBILITY IMPROVED */}

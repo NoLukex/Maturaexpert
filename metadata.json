@@ -1,5 +1,10 @@
 {
   "name": "Matura Master - Mateusz Wiśniewski Edition",
   "description": "A personalized, AI-powered English learning platform for the Polish Matura exam (Basic Level).",
-  "requestFramePermissions": []
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

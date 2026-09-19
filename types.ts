@@ -101,6 +101,39 @@ export interface WritingTask {
   topic?: string;
   minWords?: number;
   maxWords?: number;
+  sampleEssay?: string;
+}
+
+export interface DetailedError {
+  original: string;
+  corrected: string;
+  category: 'gramatyka' | 'leksyka' | 'ortografia' | 'interpunkcja' | 'styl';
+  explanation: string;
+}
+
+export interface BulletPointAnalysis {
+  bulletNumber: number;
+  bulletText: string;
+  status: 'rozwiniety' | 'odniesiony' | 'brak';
+  cytat?: string;
+  comment: string;
+}
+
+export interface LexicalRecommendation {
+  original: string;
+  suggested: string;
+  reason: string;
+}
+
+export interface TextFormalStats {
+  liczbaSlow: number;
+  liczbaZdan: number;
+  sredniaDlugoscZdania?: number;
+  poziomJezykowy: string;
+  zgodnoscLimituSlow: 'w_normie' | 'za_krotki' | 'za_dlugi';
+  maPowitanie: boolean;
+  maPozegnanie: boolean;
+  maAkapity: boolean;
 }
 
 export interface WritingAssessment {
@@ -111,6 +144,12 @@ export interface WritingAssessment {
   suma: number;
   podsumowanie: string;
   wskazowki: string[];
+  podpunkty?: BulletPointAnalysis[];
+  szczegoloweBledy?: DetailedError[];
+  mocneStrony?: string[];
+  rekomendacjeLeksykalne?: LexicalRecommendation[];
+  ulepszonaWersja?: string;
+  statystykiTekstu?: TextFormalStats;
 }
 
 export interface SpeakingCriterionAssessment {

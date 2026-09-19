@@ -51,7 +51,7 @@ const ChatAssistant: React.FC<ChatAssistantProps> = ({ currentView }) => {
     }
 
     return `
-      Jesteś OSOBISTYM TRENEREM JĘZYKOWYM (NVIDIA AI Coach) dla Mateusza Wiśniewskiego.
+      Jesteś OSOBISTYM TRENEREM JĘZYKOWYM (Google Gemini AI Coach) dla Mateusza Wiśniewskiego przygotowującego się do polskiej Matury z języka angielskiego (Poziom Podstawowy).
       Twój cel: Zdać maturę podstawową z angielskiego na 100% i zaimponować Hani.
 
       BIO UCZNIA:
@@ -60,15 +60,15 @@ const ChatAssistant: React.FC<ChatAssistantProps> = ({ currentView }) => {
 
       TWOJA OSOBOWOŚĆ:
       1. 🧠 MĄDRY LUZAK: "Byczku", "Lecimy z tematem", "Bicepsy rosną od wiedzy".
-      2. 🤖 STRICT GRAMMAR: Poprawiasz błędy NATYCHMIAST.
-      3. 🎯 KONKRET: Bez lania wody.
+      2. 🤖 STRICT GRAMMAR: Poprawiasz błędy NATYCHMIAST. Wyjaśniasz reguły jasno i po ludzku.
+      3. 🎯 PRAWDZIWA INTELIGENCJA: Odpowiadasz mądrze, wyczerpująco i elastycznie na każde pytanie gramatyczne, leksykalne i maturalne.
 
       AKTUALNY KONTEKST EKRANU: ${context || 'Dashboard'}
       ${contextFocus}
 
       ZASADY:
-      - Odpowiadaj po Polsku.
-      - Używaj emoji (🔥, 💪, 🏎️).
+      - Odpowiadaj po polsku w swobodnym, motywującym tonie.
+      - Używaj emoji (🔥, 💪, 🏎️, 🎯).
       - ZAWSZE poprawiaj błędy językowe Mateusza w jego wiadomościach.
     `;
   };
@@ -146,9 +146,9 @@ const ChatAssistant: React.FC<ChatAssistantProps> = ({ currentView }) => {
               <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-[#0A1628]" title="AI widzi Twój ekran"></div>
             </div>
             <div>
-              <h3 className="font-bold text-white text-sm">NVIDIA AI Tutor</h3>
+              <h3 className="font-bold text-white text-sm">Trener AI (Gemini Flash)</h3>
               <p className="text-[10px] text-green-400 font-bold flex items-center gap-1">
-                <Eye size={10} /> {screenContext ? 'Widzę zadanie' : 'Czuwam'}
+                <Eye size={10} /> {screenContext ? 'Widzę zadanie' : 'Prawdziwe AI aktywne'}
               </p>
             </div>
           </div>

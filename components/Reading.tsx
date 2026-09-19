@@ -224,8 +224,7 @@ const Reading: FC = () => {
         setIsSidebarOpen(false);
       }
     } catch (e) {
-      console.error(e);
-      alert("Błąd generowania przez NVIDIA NIM.");
+      console.error("Reading task generator error:", e);
     } finally {
       setIsGenerating(false);
     }

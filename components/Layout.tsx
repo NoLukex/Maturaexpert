@@ -61,7 +61,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [notification, setNotification] = useState<{ title: string; icon: string; kind: 'achievement' | 'reminder' } | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, syncing, enabled, login, logout } = useAuth();
+  const { user, syncing, enabled, login, logout, syncNow } = useAuth();
 
   // Map path to ViewState for backward compatibility/styling
   const getCurrentView = (): ViewState => {
@@ -181,7 +181,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </nav>
 
         <div className="p-6 border-t border-white/5 bg-black/10">
-          {enabled && (
+          {enabled ? (
             <div className="mb-3 p-2 rounded-xl border border-white/10 bg-white/5">
               {user ? (
                 <div className="space-y-2">
@@ -205,6 +205,27 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   <LogIn size={14} /> Zaloguj i synchronizuj
                 </button>
               )}
+            </div>
+          ) : (
+            <div className="mb-3 p-2.5 rounded-xl border border-emerald-500/20 bg-emerald-500/10">
+              <div className="flex items-center justify-between">
+                <div className="text-[10px] text-emerald-400 uppercase tracking-widest font-bold flex items-center gap-1.5">
+                  <Cloud size={12} className={syncing ? 'animate-spin text-amber-300' : 'text-emerald-400'} />
+                  {syncing ? 'Zapisywanie w chmurze...' : 'Chmura i Auto-Zapis'}
+                </div>
+                <span className={`w-2 h-2 rounded-full ${syncing ? 'bg-amber-400 animate-ping' : 'bg-emerald-400 animate-pulse'}`} title="Zapisywanie w chmurze serwera"></span>
+              </div>
+              <div className="flex items-center justify-between mt-1">
+                <p className="text-[10px] text-gray-300">Aktywny (100% bez logowania)</p>
+                <button
+                  onClick={() => syncNow()}
+                  disabled={syncing}
+                  className="text-[9px] font-bold text-emerald-400 hover:text-emerald-300 underline"
+                  title="Wymuś synchronizację z chmurą"
+                >
+                  {syncing ? '...' : 'Sync'}
+                </button>
+              </div>
             </div>
           )}
 

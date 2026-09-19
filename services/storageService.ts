@@ -6,6 +6,7 @@ const STATS_KEY = 'matura_master_stats';
 const FLASHCARDS_KEY = 'matura_master_flashcards';
 const VOCAB_INDICES_KEY = 'matura_master_vocab_indices';
 const DAILY_PLAN_KEY = 'matura_master_daily_plan_v1';
+const DAILY_CHALLENGE_KEY = 'matura_master_daily_challenge_v1';
 const PREFERENCES_KEY = 'matura_master_preferences_v1';
 const REMINDER_LAST_SHOWN_KEY = 'matura_master_last_reminder_v1';
 
@@ -523,6 +524,43 @@ export const toggleDailyPlanTask = (index: number) => {
   }));
 
   return newStatus;
+};
+
+// --- DAILY CHALLENGE PERSISTENCE ---
+
+export const getDailyChallengeStatus = (): { solved: boolean; solvedAt?: string } => {
+  const today = getLocalDateKey(new Date());
+  const parsed = safeParse<{ date?: string; solved?: boolean; solvedAt?: string }>(localStorage.getItem(DAILY_CHALLENGE_KEY), {});
+  if (parsed.date === today && parsed.solved) {
+    return { solved: true, solvedAt: parsed.solvedAt };
+  }
+  return { solved: false };
+};
+
+export const completeDailyChallenge = (xpReward: number = 25): { solved: boolean; xpAwarded: number } => {
+  const today = getLocalDateKey(new Date());
+  const current = getDailyChallengeStatus();
+  if (current.solved) {
+    return { solved: true, xpAwarded: 0 };
+  }
+
+  localStorage.setItem(DAILY_CHALLENGE_KEY, JSON.stringify({
+    date: today,
+    solved: true,
+    solvedAt: new Date().toISOString()
+  }));
+
+  // Award XP and touch daily activity & streak
+  addXP(xpReward);
+  playFeedbackSound('success');
+
+  // Also auto-complete 1st task in daily planner if not done
+  const plan = getDailyPlanStatus();
+  if (!plan[0]) {
+    toggleDailyPlanTask(0);
+  }
+
+  return { solved: true, xpAwarded: xpReward };
 };
 
 // --- MISTAKE MANAGEMENT ---

@@ -116,7 +116,7 @@ export const useGrammar = () => {
                 const newTask: GrammarTask = {
                     id: newTaskId,
                     type: activeSection.tasks[0].type,
-                    instruction: generatedData.instruction || "Zestaw wygenerowany przez NVIDIA AI",
+                    instruction: generatedData.instruction || "Zestaw CKE Trening AI",
                     questions: generatedData.questions
                 };
 
