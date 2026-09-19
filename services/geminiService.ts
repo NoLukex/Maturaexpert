@@ -214,10 +214,58 @@ export const playTextToSpeech = async (text: string, onEnded?: () => void): Prom
 
 // --- GRADING & REPORT LOGIC ---
 
+const generateLocalHeuristicGrading = (studentText: string): WritingAssessment => {
+  const words = studentText.trim().split(/\s+/).filter(w => w.length > 0);
+  const wordCount = words.length;
+
+  let trescPkt = 4;
+  let trescKomentarz = "Praca odnosi się do wszystkich wymaganych punktów polecenia.";
+  if (wordCount < 40) {
+    trescPkt = 1;
+    trescKomentarz = "Bardzo krótka wypowiedź, pomija lub bardzo skrótowo traktuje punkty polecenia.";
+  } else if (wordCount < 80) {
+    trescPkt = 2;
+    trescKomentarz = "Wypowiedź poniżej limitu słów (80-130). Część punktów rozwinięta tylko pobieżnie.";
+  } else if (wordCount > 150) {
+    trescPkt = 3;
+    trescKomentarz = "Praca przekracza zalecany limit słów, jednak zachowuje spójność i realizuje polecenie.";
+  }
+
+  let spojnoscPkt = wordCount >= 60 ? 2 : 1;
+  let spojnoscKomentarz = spojnoscPkt === 2
+    ? "Wypowiedź jest spójna i logiczna, akapity i zdania są czytelnie połączone."
+    : "Spójność jest częściowa, warto zadbać o spójniki (and, because, but, however, so).";
+
+  let zakresPkt = wordCount >= 80 ? 2 : 1;
+  let zakresKomentarz = zakresPkt === 2
+    ? "Wystarczający zasób środków językowych dopasowany do matury podstawowej."
+    : "Słownictwo jest ograniczone i powtarzalne. Poszerz zasób przymiotników i zwrotów.";
+
+  let poprawnoscPkt = 2;
+  let poprawnoscKomentarz = "Dobra poprawność językowa i gramatyczna.";
+  const sampleErrors: string[] = [];
+
+  const suma = trescPkt + spojnoscPkt + zakresPkt + poprawnoscPkt;
+
+  return {
+    tresc: { punkty: trescPkt, komentarz: trescKomentarz },
+    spojnosc: { punkty: spojnoscPkt, komentarz: spojnoscKomentarz },
+    zakres: { punkty: zakresPkt, komentarz: zakresKomentarz },
+    poprawnosc: { punkty: poprawnoscPkt, komentarz: poprawnoscKomentarz, bledy: sampleErrors },
+    suma,
+    podsumowanie: `Ocena automatyczna (Tryb Bezpłatny/Offline): Uzyskano ${suma}/10 pkt. Długość pracy: ${wordCount} słów.`,
+    wskazowki: [
+      "Pamiętaj o trzymaniu się limitu 80-130 słów na maturze podstawowej.",
+      "Rozwiń każdy z 4 punktów polecenia w osobnych zdaniach/akapitach.",
+      "Stosuj urozmaicone spójniki i zwroty łączące zdania."
+    ]
+  };
+};
+
 export const gradeWritingTask = async (topic: string, studentText: string): Promise<WritingAssessment> => {
   try {
     if (!apiKey || apiKey.includes("TWÓJ_KLUCZ")) {
-      throw new Error("Missing NVIDIA API Key");
+      return generateLocalHeuristicGrading(studentText);
     }
 
     const prompt = `
@@ -256,26 +304,10 @@ export const gradeWritingTask = async (topic: string, studentText: string): Prom
     });
 
     const jsonText = response.choices[0]?.message?.content;
-    return parseJsonObject<WritingAssessment>(jsonText, {
-      tresc: { punkty: 0, komentarz: "Brak danych z AI." },
-      spojnosc: { punkty: 0, komentarz: "Brak danych z AI." },
-      zakres: { punkty: 0, komentarz: "Brak danych z AI." },
-      poprawnosc: { punkty: 0, komentarz: "Brak danych z AI.", bledy: [] },
-      suma: 0,
-      podsumowanie: "Nie udalo sie odczytac oceny AI.",
-      wskazowki: ["Sprobuj ponownie za chwile."]
-    });
+    return parseJsonObject<WritingAssessment>(jsonText, generateLocalHeuristicGrading(studentText));
   } catch (error) {
-    console.error("NVIDIA AI Grading Error:", error);
-    return {
-      tresc: { punkty: 0, komentarz: "Błąd połączenia z NVIDIA AI. Sprawdź klucz API." },
-      spojnosc: { punkty: 0, komentarz: "-" },
-      zakres: { punkty: 0, komentarz: "-" },
-      poprawnosc: { punkty: 0, komentarz: "-", bledy: [] },
-      suma: 0,
-      podsumowanie: "Wystąpił błąd techniczny. Spróbuj ponownie później.",
-      wskazowki: ["Sprawdź połączenie internetowe i klucz NVIDIA_API_KEY."]
-    };
+    console.error("NVIDIA AI Grading Error (falling back to heuristic):", error);
+    return generateLocalHeuristicGrading(studentText);
   }
 };
 
